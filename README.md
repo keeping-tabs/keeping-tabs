@@ -3,7 +3,7 @@
 
 # Team #
 
-Product Owner - @louisbuchbinder
-Scrum Master - @jakech
-Development Team - @liminator1106, @Ivnmza
+- Product Owner - @louisbuchbinder
+- Scrum Master - @jakech
+- Development Team - @liminator1106, @Ivnmza
 
