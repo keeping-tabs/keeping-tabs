@@ -5,5 +5,5 @@
 
 - Product Owner - @louisbuchbinder
 - Scrum Master - @jakech
-- Development Team - @liminator1106, @Ivnmza
+- Development Team - @liminator1106, @Ivnmza, @jakech, @louisbuchbinder
 
