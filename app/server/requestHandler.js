@@ -55,12 +55,36 @@ exports.linksPost = function (request, response) {
 };
 
 
-// var fs = require('fs');
+// currently the .linksGet will respond with the tempUrls object
+// while the .urls will respond with a rendered page utilizing the tempUrls
+// there is no need for this redundncy in production
+// it is here because we need to decide on the best way to render the links page
+// what we have now is just an example
 
 exports.linksGet = function (request, response) {
   response.send(JSON.stringify(tempUrls));
 };
 
+
+exports.urls = function (req, res) {
+  res.render('links', { title: 'Hey', message: 'Hello there!', 
+    
+    script: 
+      // generate javascript as a string to render with jade
+      // ultimately this may be changed to work with Angular
+      // also currently relies on the global urls variable
+      'var urls =[' 
+      //
+      + Object.keys(tempUrls)
+        .map(function (url) { 
+          // wrap each url string in single quotes so they are interpreted as strings on the client side
+          return '\'' + url + '\''
+        })
+        .toString() 
+
+      + '];'
+  });
+}
 
 
 

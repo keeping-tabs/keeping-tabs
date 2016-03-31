@@ -30,10 +30,28 @@
   /*
   // make post example
   makePost(['https://www.google.com', 'https://www.amazon.com'])
-  .then(function(){alert('success')})
+    .then(function(){alert('success')})
   .catch(function(){alert('fail')})
   */
 
+  var makeGet = function () {
+    // expects urls to be an array
+    return new Promise (function (resolve, reject) {
+      $.ajax({
+        type: "GET",
+        url: '/links',
+        success: resolve
+      })
+      .fail(reject);
+    });
+  };
+
+  /*
+  // make get example
+  makeGet()
+    .then(function(data){alert('success'); console.log(data);})
+  .catch(function(error){alert('fail'); console.log(error);})
+  */
 
 
 </script>
