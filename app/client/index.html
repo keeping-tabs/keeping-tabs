@@ -3,6 +3,43 @@
 <!--
   This is a temporary file to act as a placeholder until the main app page is created
 -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+  //////////////////////////////////////////////////////
+  //**************************************************//
+  // DO NOT DELETE. LETS MOVE THIS TO TESTING SUITE   //
+  //**************************************************//
+  //////////////////////////////////////////////////////
+  
+  // basic tests for server 
+
+  var makePost = function (urls) {
+    // expects urls to be an array
+    return new Promise (function (resolve, reject) {
+      $.ajax({
+        type: "POST",
+        url: '/links',
+        data: {urls: urls},
+        success: resolve
+      })
+      .fail(reject);
+    });
+  };
+
+  /*
+  // make post example
+  makePost(['https://www.google.com', 'https://www.amazon.com'])
+  .then(function(){alert('success')})
+  .catch(function(){alert('fail')})
+  */
+
+
+
+</script>
+
+
+
 <head>
   <title>Keeping Tabs Home Page</title>
 </head>
