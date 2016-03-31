@@ -42,7 +42,7 @@ app.post('/links', handler.linksPost);
 
 //jade rendering
 app.get('/urls', function (req, res) {
-  res.render('links', { title: 'Hey', message: 'Hello there!'});
+  res.render('links', { title: 'Hey', message: 'Hello there!', script: 'alert(\'Got Ya\');'});
 });
 
 /////*****/////*****/////*****/////*****
