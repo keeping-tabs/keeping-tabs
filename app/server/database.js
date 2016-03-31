@@ -1,22 +1,27 @@
 var path = require('path');
 var sqlite3 = require('sqlite3');
 
-var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs'), function(err) {
+var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3'), function(err) {
   if(err) console.error('Database connection error: ', err);
 });
 
 db.serialize(function() {
-  db.run("CREATE TABLE lorem (info TEXT)");
+  db.run("DROP TABLE IF EXISTS links");
+  db.run("CREATE TABLE IF NOT EXISTS links (title TEXT, url TEXT, created TEXT)");
 
-  var stmt = db.prepare("INSERT INTO lorem VALUES (?)");
-  for (var i = 0; i < 10; i++) {
-      stmt.run("Ipsum " + i);
-  }
-  stmt.finalize();
+  // var stmt = db.prepare("INSERT INTO links VALUES ($title, $url, $created)");
+  // for (var i = 0; i < 10; i++) {
+  //     stmt.run({
+  //       $title: "Ipsum " + i,
+  //       $url: 'http://apple.com',
+  //       $created: Date.now()
+  //     });
+  // }
+  // stmt.finalize();
 
-  db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
-      console.log(row.id + ": " + row.info);
-  });
+  // db.each("SELECT * FROM links", function(err, link) {
+  //     console.log(link.title + ": " + link.url + "--" + Date(link.created));
+  // });
 });
 
-db.close();
+module.exports = db;
