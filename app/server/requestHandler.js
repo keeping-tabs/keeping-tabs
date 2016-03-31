@@ -26,15 +26,20 @@ var tempSetUrls = function (urls) {
 //////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
 ////////////////////////////////////////////////////////////////////////////////
 
-
+var db = require('./database.js');
 
 
 
 var setUrls = function (urls) {
   return new Promise(function (resolve, reject) {
-    tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
-    tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
-    reject('issue in tempSetUrls complete method');// currently executing synchronously this line should not fire. 
+    // tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
+    // tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
+    
+    db.saveUrls(urls)
+      .then(resolve)
+    .catch(reject);
+
+    // reject('issue in tempSetUrls complete method');// currently executing synchronously this line should not fire. 
     // If it does then there was an issue firing the complete method on the tempSetUrls function
   });
 };
@@ -62,29 +67,53 @@ exports.linksPost = function (request, response) {
 // what we have now is just an example
 
 exports.linksGet = function (request, response) {
-  response.send(JSON.stringify(tempUrls));
+  db.fetchUrls()
+    .then(function (data) {
+      response.send(JSON.stringify(data));
+    })
+  .catch(function (error) {
+    response.sendStatus(404);
+    response.send(error);
+  });
 };
 
 
 exports.urls = function (req, res) {
-  res.render('links', { title: 'Hey', message: 'Hello there!', 
-    
-    script: 
-      // generate javascript as a string to render with jade
-      // ultimately this may be changed to work with Angular
-      // also currently relies on the global urls variable
-      'var urls =[' 
-      //
-      + Object.keys(tempUrls)
-        .map(function (url) { 
-          // wrap each url string in single quotes so they are interpreted as strings on the client side
-          return '\'' + url + '\''
-        })
-        .toString() 
+  db.fetchUrls()
+    .then(function (data) {
+      var urls = convertUrlDataToUrlArray(data);
+      res.render('links', { title: 'Hey', message: 'Hello there!', 
+        
+        script: 
+          // generate javascript as a string to render with jade
+          // ultimately this may be changed to work with Angular
+          // also currently relies on the global urls variable
+          'var urls =[' 
+          //
+          + urls.map(function (url) { 
+              // wrap each url string in single quotes so they are interpreted as strings on the client side
+              return '\'' + url + '\''
+            })
+            .toString() 
 
-      + '];'
+          + '];'
+      }); 
+    })
+  .catch(function (error) {
+    response.sendStatus(404);
+    response.send(error);
   });
-}
+};
+
+
+
+var convertUrlDataToUrlArray = function (data) {
+  return data.map(function (link) {
+    return link.url;
+  });
+};
+
+
 
 
 
