@@ -55,9 +55,11 @@ exports.linksPost = function (request, response) {
 };
 
 
-var fs = require('fs');
+// var fs = require('fs');
 
-exports.linksGet = function (request, response) {};
+exports.linksGet = function (request, response) {
+  response.send(JSON.stringify(tempUrls));
+};
 
 
 

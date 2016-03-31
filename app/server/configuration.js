@@ -16,8 +16,7 @@ app.use(express.static(__dirname + '/../client'));
 
 // app.get('/', handler.index);
 
-// app.get('/links', handler.linksGet);
-
+app.get('/links', handler.linksGet);
 app.post('/links', handler.linksPost);
 
 
