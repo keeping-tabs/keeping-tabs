@@ -7,13 +7,15 @@
 
   "browser_action": {
     "default_icon": "keeping-tabsicon.png",
-    "default_popup": "Index.html",
+    // "default_popup": "Index.html",
     "default_title": "JUSTIN LIM IN DA BROWSER"
   },
   "permissions": [
     "activeTab",
-    "tabs",
-    "server", 
-    "https://ajax.googleapis.com/"
-  ]
+    "tabs", 
+    "http://localhost/*"
+  ],
+  "background": {
+    "scripts": ["jquery-2.2.2.min.js", "init.js"]
+  }
 }

@@ -1,11 +1,13 @@
 //begin
-onload = setTimeout(init,0); // workaround for server
+var onload = setTimeout(init,2000); // workaround for server
 
 function init(){
 
-  openedTabs = document.getElemenybyId('openedTabs');
-  
-  getTab(postTabs);
+  // var openedTabs = document.getElemenybyId('openedTabs');
+  console.log("Service Initialized")
+  chrome.browserAction.onClicked.addListener(function(){
+    getTab(postTabs);
+  })
 }
 
 function getTab(callback){
