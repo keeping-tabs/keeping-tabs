@@ -4,24 +4,24 @@
 
 // this section is temporary awaiting the database logic
 
-var tempUrls = {};
+// var tempUrls = {};
 
-var tempSetUrls = function (urls) {
-  // this should be setting the urls in the database, 
-  // but for now we will use the tempUrls array
+// var tempSetUrls = function (urls) {
+//   // this should be setting the urls in the database, 
+//   // but for now we will use the tempUrls array
   
-  // for each url in the urls array
-  urls.forEach(function (url) {
-    //create or overwrite the url property in the tempUrls object
-    tempUrls[url] = true;
-  });
+//   // for each url in the urls array
+//   urls.forEach(function (url) {
+//     //create or overwrite the url property in the tempUrls object
+//     tempUrls[url] = true;
+//   });
 
-  // if the complete method has been set to be a function 
-  if (typeof tempSetUrls.complete === 'function' ) {
-    // then call the complete method
-    tempSetUrls.complete('resolved in the tempSetUrls');
-  }
-};
+//   // if the complete method has been set to be a function 
+//   if (typeof tempSetUrls.complete === 'function' ) {
+//     // then call the complete method
+//     tempSetUrls.complete('resolved in the tempSetUrls');
+//   }
+// };
 
 //////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,13 @@ exports.linksPost = function (request, response) {
       response.sendStatus(201);
     })
     .catch(function (error) {
-      // console.log(error);
+
+      if (error.errno === 19 && error.code === 'SQLITE_CONSTRAINT') {
+        // this condition is met when non unique data is posted to the database
+        // we should probably check before trying to post to avoid this error
+        response.sendStatus(418);
+      }
+
       response.sendStatus(400);
     });
 };

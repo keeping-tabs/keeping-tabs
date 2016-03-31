@@ -7,7 +7,7 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 
 db.serialize(function() {
   db.run("DROP TABLE IF EXISTS links");
-  db.run("CREATE TABLE IF NOT EXISTS links (title TEXT, url TEXT, created TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS links (title TEXT, url TEXT UNIQUE, created TEXT)");
 
   // var statement = db.prepare("INSERT INTO links VALUES ($title, $url, $created)");
   // for (var i = 0; i < 10; i++) {
@@ -50,7 +50,7 @@ db.saveUrls = function (urls) {
 
 
 
-
+// this can be cahnged to just return the urls instead of all the data if that is desired
 db.fetchUrls = function () {
   return new Promise(function (resolve, reject) {
     var data = [];
@@ -59,7 +59,6 @@ db.fetchUrls = function () {
         reject(error)
       };
       data.push(link);
-      // console.log(link.title + ": " + link.url + "--" + Date(link.created));
     }, function (error) {
       if (error) {
         reject(error)
