@@ -11,7 +11,9 @@
     "default_title": "JUSTIN LIM IN DA BROWSER"
   },
   "permissions": [
+    "activeTab",
     "tabs",
+    "server", 
     "https://ajax.googleapis.com/"
   ]
 }
