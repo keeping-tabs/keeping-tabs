@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
-    "pg": "^4.5.2"
+    "pg": "^4.5.2",
+    "sqlite3": "^3.1.2"
   }
 }
