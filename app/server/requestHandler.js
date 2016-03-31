@@ -41,7 +41,7 @@ var setUrls = function (urls) {
 
 
 exports.linksPost = function (request, response) {
-
+  console.log('url: ', request.body.urls);
   setUrls(request.body.urls)
     .then(function (success) {
       // console.log(success);
