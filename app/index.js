@@ -1,14 +1,13 @@
-var express = require('express');
-var app = express();
+//this is the intro server file
 
+// require('./src/server/app.js');
+
+// configure the server. return an express app as the module export
+var app = require('./server/configuration.js');
 var db = require('./server/database');
 
-app.set('port', (process.env.PORT || 3000));
+var port = process.env.PORT || 8080;
 
-app.get('/', function(req, res){
-  res.send(200, 'OK');
-});
+app.listen(port);
 
-app.listen(app.get('port'), function() {
-  console.log('App is running on port ', app.get('port'));
-});
+console.log('Server now listening on port ' + port);
