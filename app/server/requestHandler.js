@@ -1,5 +1,12 @@
+
+////////////////////////////////////////////////////////////////////////////////
+//////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
+
+// this section is temporary awaiting the database logic
+
 var tempUrls = {};
-var setUrls = function (urls) {
+
+var tempSetUrls = function (urls) {
   // this should be setting the urls in the database, 
   // but for now we will use the tempUrls array
   
@@ -8,14 +15,55 @@ var setUrls = function (urls) {
     //create or overwrite the url property in the tempUrls object
     tempUrls[url] = true;
   });
-  console.log(tempUrls);
+
+  // if the complete method has been set to be a function 
+  if (typeof tempSetUrls.complete === 'function' ) {
+    // then call the complete method
+    tempSetUrls.complete('resolved in the tempSetUrls');
+  }
+};
+
+//////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+var setUrls = function (urls) {
+  return new Promise(function (resolve, reject) {
+    tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
+    tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
+    reject('issue in tempSetUrls complete method');// currently executing synchronously this line should not fire. 
+    // If it does then there was an issue firing the complete method on the tempSetUrls function
+  });
 };
 
 
 exports.linksPost = function (request, response) {
-  var urls = request.body.urls;
-  setUrls(urls);
 
-  response.sendStatus(201);
-  // response.sendStatus(400);
+  setUrls(request.body.urls)
+    .then(function (success) {
+      // console.log(success);
+      // console.log(tempUrls);
+      response.sendStatus(201);
+    })
+    .catch(function (error) {
+      // console.log(error);
+      response.sendStatus(400);
+    });
 };
+
+
+var fs = require('fs');
+
+exports.linksGet = function (request, response) {};
+
+
+
+
+
+
+
+
+
