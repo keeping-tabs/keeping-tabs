@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+
+  "name": "KeepinTabs",
+  "description": "This extension organizes a users browser tabs",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "keeping-tabsicon.png",
+    "default_popup": "Index.html",
+    "default_title": "JUSTIN LIM IN DA BROWSER"
+  },
+  "permissions": [
+    "tabs",
+    "https://ajax.googleapis.com/"
+  ]
+}
