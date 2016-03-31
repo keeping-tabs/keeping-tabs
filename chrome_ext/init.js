@@ -1,5 +1,5 @@
 //begin
-var onload = setTimeout(init,2000); // workaround for server
+var onload = setTimeout(init,0); // workaround for server
 
 function init(){
 
