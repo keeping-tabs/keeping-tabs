@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 
+var db = require('./server/database');
+
 app.set('port', (process.env.PORT || 3000));
 
 app.get('/', function(req, res){
