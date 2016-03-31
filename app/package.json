@@ -1,0 +1,30 @@
+{
+  "name": "keeping-tabs",
+  "version": "1.0.0",
+  "description": "Keeping tabs on your tabs since 2016",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/keeping-tabs/keeping-tabs.git"
+  },
+  "keywords": [
+    "Chrome",
+    "Extension",
+    "Tab",
+    "Manager",
+    "Smart"
+  ],
+  "author": "! (For Git Me)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/keeping-tabs/keeping-tabs/issues"
+  },
+  "homepage": "https://github.com/keeping-tabs/keeping-tabs#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4"
+  }
+}
