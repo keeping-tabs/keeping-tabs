@@ -4,7 +4,7 @@ onload = setTimeout(init,0); // workaround for server
 function init(){
 
   openedTabs = document.getElemenybyId('openedTabs');
-  var returnedTabs=[];
+  
   getTab(postTabs);
 }
 
@@ -14,13 +14,21 @@ function getTab(callback){
     currentWindow: true
   }, function(tabArray){
     var tab = tabArray[0];
-    var url = tab.url
+    var url = [tab.url];
     console.log(url);
-    callback(url);
+    callback(url).then(console.log('success'));
   })
 }
 
-function postTabs(url) {
+function postTabs(urls) {
   // sending object 
-  req = new XMLHttprequest();
-} 
+  return new Promise(function(resolve,reject){
+    $.ajax({
+      type:"POST",
+      url:'http://localhost:8080/links',
+      data:{urls:urls},
+      success:resolve
+      })
+    .fail(reject);
+  });
+};
