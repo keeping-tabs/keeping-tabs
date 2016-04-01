@@ -9,18 +9,44 @@ module.exports = function(grunt) {
     },
 
     jshint: {
+      
       files: [
         './app/server/**/*.js', // server
         './app/client/**/*.js', // client
         './app/chrome/scripts/**/*.js', // chrome extension scripts
         './Gruntfile.js'
       ],
+
       options: {
         force: 'true',
         jshintrc: './.jshintrc',
         ignores: [
           
         ]
+      },
+
+      chrome: {
+        options: {
+          globals: {
+            $: false,
+            chrome: false
+          }
+        },
+        files: {
+          src: ['./app/chrome/scripts/**/*.js']
+        }
+      },
+
+      server: {
+        files: {
+          src: ['./app/server/**/*.js']
+        }
+      },
+
+      client: {
+        files: {
+          src: ['./app/client/**/*.js']
+        }
       }
     },
 
@@ -30,7 +56,7 @@ module.exports = function(grunt) {
         src: ['./app/chrome/scripts/**/*.js'],
         dest: './app/chrome/dist/script.js'
       },
-      vendors: {
+      'chrome-vendors': {
         src: [
           './node_modules/jquery/dist/jquery.min.js'
         ],
@@ -46,9 +72,14 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-mocha-test');
   // grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+  
+  grunt.registerTask('build-chrome', [
+    'jshint:chrome',
+    'concat:chrome',
+    'concat:chrome-vendors'
+  ]);
 
   grunt.registerTask('build', [
-    'jshint',
-    'concat'
+    'build-chrome'
   ]);
 };
