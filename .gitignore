@@ -67,3 +67,6 @@ jspm_packages
 
 # sqlite3 db
 app/db/*
+
+# build dirs
+app/chrome/dist
