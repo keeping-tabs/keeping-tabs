@@ -4,7 +4,7 @@
   "name": "KeepinTabs",
   "description": "This extension organizes a users browser tabs",
   "version": "1.0",
-  "content_security_policy": "script-src 'self' http://127.0.0.1; object-src 'self'",
+  "content_security_policy": "script-src 'self' http://localhost:8080 https://ajax.googleapis.com; object-src 'self'",
   "browser_action": {
     "default_icon": "keeping-tabsicon.png",
     // "default_popup": "Index.html",
@@ -12,7 +12,7 @@
   },
   "permissions": [
     "activeTab",
-    "tabs", 
+    "tabs",
     "http://localhost/*"
   ],
   "background": {
