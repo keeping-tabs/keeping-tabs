@@ -12,6 +12,7 @@ module.exports = function(grunt) {
       files: [
         './app/server/**/*.js', // server
         './app/client/**/*.js', // client
+        './app/chrome/scripts/**/*.js', // chrome extension scripts
         './Gruntfile.js'
       ],
       options: {
@@ -24,7 +25,18 @@ module.exports = function(grunt) {
     },
 
     watch: {},
-    concat: {}
+    concat: {
+      chrome: {
+        src: ['./app/chrome/scripts/**/*.js'],
+        dest: './app/chrome/dist/script.js'
+      },
+      vendors: {
+        src: [
+          './node_modules/jquery/dist/jquery.min.js'
+        ],
+        dest: './app/chrome/dist/vendors.js'
+      }
+    }
   });
 
   // grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -34,4 +46,9 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-mocha-test');
   // grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+
+  grunt.registerTask('build', [
+    'jshint',
+    'concat'
+  ]);
 };
