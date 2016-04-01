@@ -30,6 +30,9 @@
     "jade": "^1.11.0"
   },
   "devDependencies": {
-    "grunt": "^0.4.5"
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-nodemon": "^0.4.1"
   }
 }
