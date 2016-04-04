@@ -5,7 +5,7 @@ var tea = {
 
 var chai = require('chai');
 var assert = require('assert');
-
+/* globals describe: false, it: false */
 describe('Example Tests', function () {
   it('should equal 2 in just plain mocha', function () {
     assert.equal(2, 1 + 1);
@@ -32,7 +32,7 @@ describe('Example Tests', function () {
 
 		assert.typeOf(foo, 'string');
 		assert.equal(foo, 'bar');
-		assert.lengthOf(foo, 3)
+		assert.lengthOf(foo, 3);
 		assert.property(tea, 'flavors');
 		assert.lengthOf(tea.flavors, 3);
   });
