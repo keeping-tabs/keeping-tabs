@@ -60,3 +60,4 @@ describe('Linked List tests', function () {
     expect(function(){list.push('not a link')}).to.throw(Error);
   });
 });
+
