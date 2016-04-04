@@ -5,12 +5,27 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     
     mochaTest: {
-      // test: {
-      //   options: {
-      //     reporter: 'spec'
-      //   },
-      //   src: ['test/**/*.js']
-      // }
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        src: [
+          'app/server/spec/**/*.js',
+          'app/client/spec/**/*.js',
+          'app/chrome/spec/**/*.js',
+          'app/chrome_ext/spec/**/*.js',
+        ]
+      }
+    },
+
+    mocha: {
+      all: {
+        // include html spec files here
+        // src: ['browser tests/spec.html'],
+      },
+      options: {
+        run: true
+      },
     },
     
     nodemon: {
@@ -67,7 +82,11 @@ module.exports = function(grunt) {
       client: {
         files: ['./app/client/**/*.js'],
         tasks: ['jshint:client']
-      }
+      },
+      scripts: {
+        files: ['**/*.js'],
+        tasks: ['mochaTest'/*, 'mocha'*/],
+      },
     },
 
     concat: {
