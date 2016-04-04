@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/../client'));
 app.use('/chrome', express.static(__dirname+ '/../chrome'));
 // set the view rendering to generate from the views directory
-app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/views');
 // set the view engine to use jade
 app.set('view engine', 'jade');
 

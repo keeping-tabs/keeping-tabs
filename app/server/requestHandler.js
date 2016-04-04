@@ -48,7 +48,7 @@ var setUrls = function (urls) {
 exports.linksPost = function (request, response) {
   console.log('url: ', request.body.urls);
   setUrls(request.body.urls)
-    .then(function (success) {
+    .then(function () {
       // console.log(success);
       // console.log(tempUrls);
       response.sendStatus(201);
@@ -94,30 +94,30 @@ exports.urls = function (req, res) {
           // generate javascript as a string to render with jade
           // ultimately this may be changed to work with Angular
           // also currently relies on the global urls variable
-          'var urls =[' 
+          'var urls =[' +
           //
-          + urls.map(function (url) { 
+          urls.map(function (url) { 
               // wrap each url string in single quotes so they are interpreted as strings on the client side
-              return '\'' + url + '\''
+              return '\'' + url + '\'';
             })
-            .toString() 
+            .toString() +
 
-          + '];'
-      }); 
+          '];'
+      });
     })
   .catch(function (error) {
-    response.sendStatus(404);
-    response.send(error);
+    res.sendStatus(404);
+    res.send(error);
   });
 };
 
 
 
-var convertUrlDataToUrlArray = function (data) {
+function convertUrlDataToUrlArray(data) {
   return data.map(function (link) {
     return link.url;
   });
-};
+}
 
 
 

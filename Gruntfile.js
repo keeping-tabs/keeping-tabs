@@ -15,12 +15,8 @@ module.exports = function(grunt) {
     
     nodemon: {
       dev: {
-        script: './app/server/index.js'
+        script: './app/index.js'
       }
-    },
-
-    eslint: {
-      target: ['./app/server/**/*.js']
     },
 
     jshint: {
@@ -48,7 +44,7 @@ module.exports = function(grunt) {
 
       server: {
         files: {
-          src: ['./app/server/**/*.js']
+          src: ['./app/server/**/*.js', './app/server/index.js']
         }
       },
 
@@ -59,7 +55,21 @@ module.exports = function(grunt) {
       }
     },
 
-    watch: {},
+    watch: {
+      chrome: {
+        files: ['./app/chrome/scripts/**/*.js'],
+        tasks: ['jshint:chrome', 'build-chrome']
+      },
+      server: {
+        files: ['./app/server/**/*.js', './app/server/index.js'],
+        tasks: ['jshint:server']
+      },
+      client: {
+        files: ['./app/client/**/*.js'],
+        tasks: ['jshint:client']
+      }
+    },
+
     concat: {
       chrome: {
         src: ['./app/chrome/scripts/**/*.js'],
@@ -73,22 +83,20 @@ module.exports = function(grunt) {
       }
     }
   });
-
-  // // grunt.loadNpmTasks('grunt-contrib-uglify');
-  // grunt.loadNpmTasks('grunt-contrib-jshint');
-  // grunt.loadNpmTasks('grunt-contrib-watch');
-  // grunt.loadNpmTasks('grunt-contrib-concat');
-  // grunt.loadNpmTasks('grunt-mocha-test');
-  // // grunt.loadNpmTasks('grunt-shell');
-  // grunt.loadNpmTasks('grunt-nodemon');
   
   grunt.registerTask('build-chrome', [
-    'jshint:chrome',
     'concat:chrome',
     'concat:chrome-vendors'
   ]);
 
   grunt.registerTask('build', [
     'build-chrome'
+  ]);
+  
+  grunt.registerTask('default', [
+    'jshint',
+    // 'mochaTest',
+    'build' ,
+    'watch'
   ]);
 };
