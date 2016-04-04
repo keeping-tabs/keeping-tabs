@@ -5,11 +5,8 @@ var tea = {
 
 var chai = require('chai');
 var assert = require('assert');
-<<<<<<< 006c109471ae2894f4509138c132584ce81b665e
 /* globals describe: false, it: false */
-=======
 
->>>>>>> added testing automation
 describe('Example Tests', function () {
   it('should equal 2 in just plain mocha', function () {
     assert.equal(2, 1 + 1);
@@ -36,11 +33,7 @@ describe('Example Tests', function () {
 
 		assert.typeOf(foo, 'string');
 		assert.equal(foo, 'bar');
-<<<<<<< 006c109471ae2894f4509138c132584ce81b665e
 		assert.lengthOf(foo, 3);
-=======
-		assert.lengthOf(foo, 3)
->>>>>>> added testing automation
 		assert.property(tea, 'flavors');
 		assert.lengthOf(tea.flavors, 3);
   });
