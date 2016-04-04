@@ -1,6 +1,6 @@
 var removeTab = function(){
-	this.dequeue();
-	initializeTimer.call(this);
+  this.dequeue();
+  initializeTimer.call(this);
 };
 
 var timer;
@@ -10,21 +10,21 @@ var userTimeLimit;
 //userTimeLimit will be set by user somewhere
 
 var initializeTimer = function(){
-	if(timer){
-		clearTimeout(timer);
-	}
-	if(this.first === -1){x
-		return null;
-	}
-	var elapsedTime = (new Date()).getTime() - this.structure[this.first].data.createdAt;
-	//I'm naming it queue.structure[this.first].data.createdAt for now, can be named something else eventually
-	var timeRemaining = userTimeLimit - elapsedTime;
-	if(timeRemaining <= 0){
-		removeTab.call(this);
-	}
-	else{
-		timer = setTimeout(removeTab.bind(this), timeRemaining);
-	}
+  if(timer){
+    clearTimeout(timer);
+  }
+  if(this.first === -1){
+    return null;
+  }
+  var elapsedTime = (new Date()).getTime() - this.structure[this.first].data.createdAt;
+  //I'm naming it queue.structure[this.first].data.createdAt for now, can be named something else eventually
+  var timeRemaining = userTimeLimit - elapsedTime;
+  if(timeRemaining <= 0){
+    removeTab.call(this);
+  }
+  else{
+    timer = setTimeout(removeTab.bind(this), timeRemaining);
+  }
 };
 
 
