@@ -13,7 +13,6 @@ module.exports = function(grunt) {
           'app/server/spec/**/*.js',
           'app/client/spec/**/*.js',
           'app/chrome/spec/**/*.js',
-          'app/chrome_ext/spec/**/*.js',
         ]
       }
     },
@@ -21,7 +20,9 @@ module.exports = function(grunt) {
     mocha: {
       all: {
         // include html spec files here
-        // src: ['browser tests/spec.html'],
+        src: [
+          'app/chrome/algorithm/spec/spec.html',
+        ],
       },
       options: {
         run: true
@@ -85,7 +86,7 @@ module.exports = function(grunt) {
       },
       scripts: {
         files: ['**/*.js'],
-        tasks: ['mochaTest'/*, 'mocha'*/],
+        tasks: ['mochaTest', 'mocha'],
       },
     },
 
