@@ -5,24 +5,22 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     
     mochaTest: {
-      test: {
-        options: {
-          reporter: 'spec'
-        },
+      options: {
+        reporter: 'spec'
+      },
+      server: {
         src: [
-          'app/server/spec/**/*.js',
-          'app/client/spec/**/*.js',
-          'app/chrome/spec/**/*.js',
+          'app/server/spec/serverSpec.js'
         ]
       }
     },
 
     mocha: {
-      all: {
+      chrome: {
         // include html spec files here
         src: [
           'app/chrome/spec/spec.html',
-        ],
+        ]
       },
       options: {
         run: true
@@ -74,20 +72,16 @@ module.exports = function(grunt) {
     watch: {
       chrome: {
         files: ['./app/chrome/scripts/**/*.js'],
-        tasks: ['jshint:chrome', 'build-chrome']
+        tasks: ['jshint:chrome', 'mocha:chrome', 'build-chrome']
       },
       server: {
         files: ['./app/server/**/*.js', './app/server/index.js'],
-        tasks: ['jshint:server']
+        tasks: ['jshint:server', 'mochaTest:server']
       },
       client: {
         files: ['./app/client/**/*.js'],
         tasks: ['jshint:client']
-      },
-      scripts: {
-        files: ['**/*.js'],
-        tasks: ['mochaTest', 'mocha'],
-      },
+      }
     },
 
     concat: {
@@ -115,7 +109,8 @@ module.exports = function(grunt) {
   
   grunt.registerTask('default', [
     'jshint',
-    // 'mochaTest',
+    'mochaTest',
+    'mocha',
     'build' ,
     'watch'
   ]);
