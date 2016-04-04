@@ -4,6 +4,7 @@
   "description": "Keeping tabs on your tabs since 2016",
   "main": "index.js",
   "scripts": {
+    "server": "nodemon ./app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -38,6 +39,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha-test": "^0.12.7",
     "grunt-nodemon": "^0.4.1",
-    "mocha": "^2.4.5"
+    "load-grunt-tasks": "^3.4.1",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.9.1"
   }
 }
