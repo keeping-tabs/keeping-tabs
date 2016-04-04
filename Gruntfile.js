@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       all: {
         // include html spec files here
         src: [
-          'app/chrome/algorithm/spec/spec.html',
+          'app/chrome/spec/spec.html',
         ],
       },
       options: {
