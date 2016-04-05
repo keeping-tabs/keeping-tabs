@@ -3,7 +3,7 @@ var http = require('http');
 
 var collectData = function (response) {
   return new Promise(function (resolve, reject) {
-    data = '';
+    var data = '';
     response.on('data', function (chunk) {
       // console.log(chunk);
       data += chunk;
@@ -21,7 +21,7 @@ var collectData = function (response) {
 
 // requestOptions = {host:'localhost' , port: '8080', path: '/', method, data,headers:{'custom': 'Custom Header Demo works'}} pseudocode
 
-module.exports = request = function (options) {
+var request = function (options) {
   if (typeof options !== 'object') { 
     throw new Error('options argument must be an object!');
   }
@@ -39,6 +39,7 @@ module.exports = request = function (options) {
   });
 };
 
+module.exports = request;
 
 // request({host:'localhost' , port: '8080', path: '/', method: 'GET'})
 // .then(function (data) {
