@@ -1,0 +1,1 @@
+require('./TimerSpec.js');

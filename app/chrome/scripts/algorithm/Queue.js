@@ -4,6 +4,7 @@ var Queue = (function() {
     var hash = {};
     this.first = -1;
     this.last = -1;
+    this.storage = storage; // for testing purposes. this should not be public
 
     var setFirst = function() {
       while (!storage[this.first]) {
@@ -61,4 +62,6 @@ var Queue = (function() {
     };
   };
 })();
+
 module.exports = Queue;
+

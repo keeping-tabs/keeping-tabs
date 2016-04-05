@@ -10,7 +10,8 @@ module.exports = function(grunt) {
       },
       server: {
         src: [
-          'app/server/spec/serverSpec.js'
+          'app/server/spec/serverSpec.js',
+          'app/chrome/spec/chromeSpec.js'
         ]
       }
     },
