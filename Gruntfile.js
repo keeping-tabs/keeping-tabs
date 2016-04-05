@@ -23,6 +23,7 @@ module.exports = function(grunt) {
         ]
       },
       options: {
+        reporter: 'spec',
         run: true
       },
     },
