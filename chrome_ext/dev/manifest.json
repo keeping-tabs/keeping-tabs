@@ -16,6 +16,7 @@
     "http://localhost/*"
   ],
   "background": {
-    "page": "background.html"
+    "page": "background.html",
+    "persistent": false
   }
 }

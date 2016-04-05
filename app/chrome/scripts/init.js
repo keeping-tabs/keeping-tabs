@@ -27,8 +27,8 @@
       return new Promise(function(resolve,reject){
         $.ajax({
           type: 'POST',
-          url: 'http://localhost:8080/links',
-          data: {urls:urls},
+          url: ENV.url + '/links',
+          data: {urls: urls},
           success: resolve
         })
         .fail(reject);
