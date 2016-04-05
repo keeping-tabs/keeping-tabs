@@ -14,6 +14,16 @@ module.exports = app;
 // middleware
 /////*****/////*****/////*****/////*****/////*****
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'chrome-extension://amaekhdmilmhgmoaackfphcjclhghmfe/');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+app.use(allowCrossDomain);
+
 // use the body parser to recognize json and url data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
