@@ -10,7 +10,8 @@
   "scripts": {
     "server": "nodemon ./app/index.js",
     "start": "node ./app/index.js",
-    "postinstall": "grunt build"
+    "postinstall": "grunt build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha": "^1.0.0",
     "grunt-mocha-test": "^0.12.7",
+    "grunt-mocha": "^1.0.0",
     "grunt-nodemon": "^0.4.1",
     "load-grunt-tasks": "^3.4.1",
     "jade": "^1.11.0",
