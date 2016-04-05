@@ -27,7 +27,7 @@
       return new Promise(function(resolve,reject){
         $.ajax({
           type: 'POST',
-          url: ENV.url + '/links',
+          url: '/links',
           data: {urls: urls},
           success: resolve
         })
