@@ -19,9 +19,9 @@ var Queue = (function() {
       if (!key || !data) {
         throw new Error('Queue.enqueue expects both key and data arguments');
       }
-      if (typeof key !== 'string') {
-        throw new Error('Queue.enqueue expects the key argument to be a string');
-      }
+      // if (typeof key !== 'string') {
+      //   throw new Error('Queue.enqueue expects the key argument to be a string');
+      // }
       this.last++;
       this.first = this.first === -1 ? this.last : this.first;
       hash[key] = this.last;
@@ -44,9 +44,9 @@ var Queue = (function() {
 
 
     this.delete = function(key) {
-      if (typeof key !== 'string') {
-        throw new Error('Queue.delete expects the key argument to be a string');
-      }
+      // if (typeof key !== 'string') {
+      //   throw new Error('Queue.delete expects the key argument to be a string');
+      // }
       var index = hash[key];
       delete storage[index];
       delete hash[key];
