@@ -29,6 +29,7 @@ var Queue = (function() {
         key: key,
         data: data
       };
+      console.log(storage)
     };
 
     this.dequeue = function() {
