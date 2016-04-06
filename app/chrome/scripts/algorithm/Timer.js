@@ -19,7 +19,7 @@ var Timer = {
     }
   },
   removeTab: function (queue) {
-    // console.log(tab, ' : was dequeued');
+    var tab = queue.dequeue();
 
     chrome.tabs.query({'active':true}, function (tabs) {
       if( 
@@ -32,7 +32,6 @@ var Timer = {
     });
     
     
-    var tab = queue.dequeue();
     console.log('Dequeued Tab: ', tab);
     this.initialize(queue);
   }
