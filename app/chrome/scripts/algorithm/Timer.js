@@ -1,7 +1,7 @@
 
 var Timer = {
   timeout: setTimeout(function() {}, 0),
-  timeLimit: 1000 * 60 * 60 * 3, //default 3 hr timelimit
+  timeLimit: 1000 * 15,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
   initialize: function (queue) {
     clearTimeout(this.timeout);
     if(queue.first === -1){
@@ -19,9 +19,21 @@ var Timer = {
     }
   },
   removeTab: function (queue) {
-    var tab = queue.dequeue();
     // console.log(tab, ' : was dequeued');
-    // chrome.tabs.remove(tab.key);
+
+    chrome.tabs.query({'active':true}, function (tabs) {
+      if( 
+        !(tabs
+        .map(function(tab){return tab.id;})
+        .some(function (id) {return tab.key === String(id);}))
+      ) {
+        chrome.tabs.remove(Number(tab.key));
+      }
+    });
+    
+    
+    var tab = queue.dequeue();
+    console.log('Dequeued Tab: ', tab);
     this.initialize(queue);
   }
 };

@@ -1,47 +1,75 @@
 //assumes instance of Queue exists
 var queue = new Queue();
+var timer = Object.create(Timer);
+
+
+var currentTab = null;
+
+
+var getTabs = function (tabId) {
+  return new Promise(function (resolve) {
+    chrome.tabs.get(tabId, function(tab){
+      // console.log('got tab', tab);
+     resolve(tab);
+    });
+  });
+};
+
+var setData = function (tab) {
+  var data = {
+    url: tab.url,
+    createdAt: Date.now()
+  };
+
+  return Promise.resolve({data:data, tab: tab});
+};
+
+
+
 
 chrome.tabs.onCreated.addListener(function(tab){
-	// send tab to queue
-	var createdAt = (new Date()).getTime();
-	var data = {
-		url: tab.url,
-		createdAt: createdAt
-	};
-	console.log(tab);
-	queue.enqueue(tab.id, data);
+	console.log('created: ', tab.id);
+  setData(tab)
+  .then(function (dataObj) {
+  	var oldTab = currentTab;
+    currentTab = dataObj.tab;
+    if (oldTab !== null) {
+      queue.enqueue(String(oldTab.id), dataObj.data);
+      timer.initialize(queue);
+    } 
+  });
 });
 
 chrome.tabs.onUpdated.addListener(function(tabId){
-	// look for relevant changed info in changeInfo (object), create (new Date()).getTime(), and run queue.update() with the updated info
-  	chrome.tabs.get(tabId, function(tab){
-  		var createdAt = (new Date()).getTime();
-  		var data = {
-  			url: tab.url,
-  			createdAt: createdAt
-  		};
-  		console.log(tab);
-  		queue.update(tabId, data);
-  	});
-	//if queue.first was pointing to updated tab, run initializeTimer()
-
+  getTabs(tabId)
+  .then(setData)
+  .then(function (dataObj) {
+    console.log('updated the tab: ', dataObj.tab.id);
+  });
 });
 
 chrome.tabs.onActivated.addListener(function(activeInfo){
 	// find tab in queue using tabId (given in activeInfo),
   var tabId = activeInfo.tabId;
-  chrome.tabs.get(tabId, function(tab){
-    var createdAt = (new Date()).getTime();
-    var data = {
-    	url: tab.url,
-    	createdAt: createdAt
-    };
-    console.log('hello from here', tab);
-    queue.update(tabId, data);
+
+  getTabs(tabId)
+  .then(setData)
+  .then(function (dataObj) {
+    console.log('activated', dataObj.tab.id);
+
+    var oldTab = currentTab;
+    currentTab = dataObj.tab;
+    
+    if (oldTab && oldTab.id !== currentTab.id) {
+      queue.delete(String(currentTab.id));
+      queue.update(String(oldTab.id), dataObj.data);
+      timer.initialize(queue);
+    }
+
   });
 });
 
 chrome.tabs.onRemoved.addListener(function(tabId){
-	//remove tabId from our queue
-	queue.delete(tabId);
+	queue.delete(String(tabId));
+  timer.initialize(queue);
 });
