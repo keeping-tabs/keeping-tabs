@@ -1,7 +1,7 @@
 (function () {
   /* globals $: false */
   $(function(){
-    /* globals chrome: false */
+    /* globals chrome: false, ENV: false */
     console.log('Service Initialized');
 
     chrome.browserAction.onClicked.addListener(function(){
