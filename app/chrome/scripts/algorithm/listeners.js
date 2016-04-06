@@ -17,6 +17,7 @@ var getTab = function (tabId) {
       reject(error);
     }
   });
+};
 
 var getAllTabs = function () {
   return new Promise(function (resolve, reject) {
@@ -86,7 +87,7 @@ var findOldTabId = function (tabIds) {
     return Promise.reject(error);
   }
   if (oldTabId.length > 1) {
-    return Promise.reject('Incorrect number of old tabs returned: "' + oldTabId.length + '" should be "1".');
+    // return Promise.reject('Incorrect number of old tabs returned: "' + oldTabId.length + '" should be "1".');
   }
   return Promise.resolve(oldTabId[0] || null);
   //resolve the old tab id
