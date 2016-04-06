@@ -10,7 +10,11 @@ module.exports = function(grunt) {
       },
       server: {
         src: [
-          'app/server/spec/serverSpec.js',
+          'app/server/spec/serverSpec.js'
+        ]
+      },
+      chrome: {
+        src: [
           'app/chrome/spec/chromeSpec.js'
         ]
       }
@@ -74,7 +78,7 @@ module.exports = function(grunt) {
     watch: {
       chrome: {
         files: ['./app/chrome/scripts/**/*.js'],
-        tasks: ['jshint:chrome', 'mocha:chrome', 'build-chrome']
+        tasks: ['jshint:chrome', 'mocha:chrome', 'mochaTest:chrome', 'build-chrome']
       },
       server: {
         files: ['./app/server/**/*.js', './app/server/index.js'],
