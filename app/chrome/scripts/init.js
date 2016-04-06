@@ -1,4 +1,3 @@
-
 var queue = require('./algorithm/Queue.js');
 var Chrome = require('./algorithm/ChromeHelpers.js');
 

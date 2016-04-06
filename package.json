@@ -39,6 +39,8 @@
     "grunt-browserify": "^5.0.0",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jade": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-mocha": "^1.0.0",
@@ -47,9 +49,9 @@
     "jade": "^1.11.0",
     "jquery": "^2.2.2",
     "load-grunt-tasks": "^3.4.1",
-    "sqlite3": "^3.1.2",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
+    "sqlite3": "^3.1.2",
     "supertest": "^1.2.0"
   }
 }

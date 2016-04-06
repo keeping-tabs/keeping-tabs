@@ -94,26 +94,98 @@ module.exports = function(grunt) {
       chrome: {
         src: ['./app/chrome/scripts/**/*.js'],
         dest: './app/chrome/dist/script.js'
+      },
+      'chrome-popup': {
+        src: ['./app/chrome/popup/**/*.js'],
+        dest: './app/chrome/dist/popup.js'
       }
     },
 
     concat: {
-      chrome: {
-        src: ['./app/chrome/scripts/**/*.js'],
-        dest: './app/chrome/dist/script.js'
-      },
       'chrome-vendors': {
         src: [
           './node_modules/jquery/dist/jquery.min.js'
         ],
         dest: './app/chrome/dist/vendors.js'
       }
+    },
+
+    jade: {
+      prod: {
+        options: {
+          data: {
+            url: 'https://keeping-tabs.herokuapp.com'
+          }
+        },
+        files: {
+          './chrome_ext/prod/background.html': './app/chrome/src/background.jade',
+          './chrome_ext/prod/popup.html': './app/chrome/src/popup.jade'
+        }
+      },
+      dev: {
+        options: {
+          data: {
+            url: 'http://localhost:8080'
+          }
+        },
+        files: {
+          './chrome_ext/dev/background.html': './app/chrome/src/background.jade',
+          './chrome_ext/dev/popup.html': './app/chrome/src/popup.jade'
+        }
+      }
+    },
+
+    copy: {
+      prod: {
+        expand: true,
+        flatten: true,
+        src: './app/chrome/src/keeping-tabsicon.png',
+        dest: './chrome_ext/dev/'
+      },
+      dev: {
+        expand: true,
+        flatten: true,
+        src: './app/chrome/src/keeping-tabsicon.png',
+        dest: './chrome_ext/prod/'
+      }
     }
   });
-  
+  grunt.registerTask('build-manifest', function() {
+    // update manifest.json
+    var manifestFile = './app/chrome/src/manifest.json';
+    
+    if (!grunt.file.exists(manifestFile)) {
+      grunt.log.error("file " + manifestFile + " not found");
+      return false;//return false to abort the execution
+    }
+    
+
+    // Prepare Production manifest
+    var manifestProd = grunt.file.readJSON(manifestFile);
+
+    manifestProd.name = manifestProd.name + ' PROD'
+    manifestProd.content_security_policy = "script-src 'self' https://keeping-tabs.herokuapp.com; object-src 'self'";
+    manifestProd.permissions.push('https://keeping-tabs.herokuapp.com/*');
+
+    grunt.file.write('./chrome_ext/prod/manifest.json', JSON.stringify(manifestProd, null, 2));
+
+    // Prepare Production manifest
+    var manifestDev = grunt.file.readJSON(manifestFile);
+
+    manifestDev.name = manifestDev.name + ' DEV'
+    manifestDev.content_security_policy = "script-src 'self' http://localhost:8080; object-src 'self'";
+    manifestDev.permissions.push('http://localhost/*');
+
+    grunt.file.write('./chrome_ext/dev/manifest.json', JSON.stringify(manifestDev, null, 2));
+  });
+
   grunt.registerTask('build-chrome', [
     'browserify:chrome',
-    'concat:chrome-vendors'
+    'browserify:chrome-popup',
+    'concat:chrome-vendors',
+    'jade',
+    'copy',
+    'build-manifest'
   ]);
 
   grunt.registerTask('build', [
