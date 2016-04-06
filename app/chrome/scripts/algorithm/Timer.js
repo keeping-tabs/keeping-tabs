@@ -21,8 +21,8 @@ var Timer = {
   removeTab: function (queue) {
     var tab = queue.dequeue();
 // console.log(hello);
-    console.log('chrome: ', chrome);
-    // var chrome = chrome || null;
+    // console.log('chrome: ', chrome);
+    var chrome = chrome;// || null;
     // console.log('chrome: ', chrome);
     if (chrome) { // this is a hack to pass the timer queue integration test because chrome wont be defined there. Instead use a callback or Promise
       chrome.tabs.query({'active':true}, function (tabs) {
