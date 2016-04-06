@@ -23,6 +23,7 @@ module.exports = function(grunt) {
         ]
       },
       options: {
+        reporter: 'spec',
         run: true
       },
     },
@@ -84,6 +85,13 @@ module.exports = function(grunt) {
       }
     },
 
+    browserify: {
+      chrome: {
+        src: ['./app/chrome/scripts/**/*.js'],
+        dest: './app/chrome/dist/script.js'
+      }
+    },
+
     concat: {
       chrome: {
         src: ['./app/chrome/scripts/**/*.js'],
@@ -99,7 +107,7 @@ module.exports = function(grunt) {
   });
   
   grunt.registerTask('build-chrome', [
-    'concat:chrome',
+    'browserify:chrome',
     'concat:chrome-vendors'
   ]);
 

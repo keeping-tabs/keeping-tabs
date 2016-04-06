@@ -8,6 +8,10 @@ var db = require('./server/database');
 
 var port = process.env.PORT || 8080;
 
-app.listen(port);
+if(module.parent) {
+  module.exports = app; // so we can require in tests
+} else{
+  app.listen(port);
+  console.log('Server now listening on port ' + port);
+}
 
-console.log('Server now listening on port ' + port);
