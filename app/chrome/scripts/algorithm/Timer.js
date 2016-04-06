@@ -1,6 +1,6 @@
 var removeTab = function(){
   var tab = this.dequeue();
-  chrome.tabs.remove(tab.key)
+  chrome.tabs.remove(tab.key);
   initializeTimer.call(this);
 };
 
