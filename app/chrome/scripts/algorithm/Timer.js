@@ -1,7 +1,9 @@
 
+var Chrome = require('./ChromeHelpers.js');
+
 var Timer = {
   timeout: setTimeout(function() {}, 0),
-  timeLimit: 1000 * 15,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
+  timeLimit: 1000 * 5,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
   initialize: function (queue) {
     clearTimeout(this.timeout);
     if(queue.first === -1){
@@ -20,20 +22,45 @@ var Timer = {
   },
   removeTab: function (queue) {
     var tab = queue.dequeue();
-// console.log(hello);
-    // console.log('chrome: ', chrome);
-    // var chrome = chrome;// || null;
-    // console.log('chrome: ', chrome);
-    if (chrome) { // this is a hack to pass the timer queue integration test because chrome wont be defined there. Instead use a callback or Promise
-      chrome.tabs.query({'active':true}, function (tabs) {
-        if( 
-          !(tabs
-          .map(function(tab){return tab.id;})
-          .some(function (id) {return tab.key === String(id);}))
-        ) {
-          chrome.tabs.remove(Number(tab.key));
-        }
-      });  
+
+    console.log(tab, 'TABID');
+
+    try {
+      // chrome.tabs.query({'active':true}, function (tabs) {
+        // if( 
+          // first check if the dequeued tab if available in all the tabs
+          // then check if the dequeued tab is not active in a window
+
+          // console.log('try');
+
+          Chrome.getAllTabs()
+          .then(Chrome.mapToTabIds)
+          .then(function (tabIds) {
+// console.log('reaching the contains');
+
+            return Chrome.containsId(tabIds, Number(tab.key));
+          })
+          .then(function (bool) {
+            // console.log('tab exists in all tabs: ' + bool);
+            if (bool) {
+              Chrome.getActiveTabs()
+              .then(Chrome.mapToTabIds)
+              .then(function (tabIds) {
+                return Chrome.containsId(tabIds, Number(tab.key));
+              })
+              .then(function (bool) {
+                // console.log('tab is active: ' + bool);
+                if (!bool) {
+                  chrome.tabs.remove(Number(tab.key));  
+                  Chrome.postTabs([tab.data.url]);
+                }
+              }); 
+            }
+          })
+
+
+    } catch (error) {
+
     }
     
     console.log('Dequeued Tab: ', tab);
@@ -41,7 +68,5 @@ var Timer = {
   }
 };
 
-if (typeof require === 'function') {
   module.exports = Timer;
-}
 
