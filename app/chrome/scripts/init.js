@@ -6,4 +6,5 @@ $(function(){
   console.log('Service Initialized');
   
   listeners.init();
+
 });
