@@ -155,7 +155,7 @@ module.exports = function(grunt) {
     var manifestFile = './app/chrome/src/manifest.json';
     
     if (!grunt.file.exists(manifestFile)) {
-      grunt.log.error("file " + manifestFile + " not found");
+      grunt.log.error('file ' + manifestFile + ' not found');
       return false;//return false to abort the execution
     }
     
@@ -163,18 +163,18 @@ module.exports = function(grunt) {
     // Prepare Production manifest
     var manifestProd = grunt.file.readJSON(manifestFile);
 
-    manifestProd.name = manifestProd.name + ' PROD'
-    manifestProd.content_security_policy = "script-src 'self' https://keeping-tabs.herokuapp.com; object-src 'self'";
-    manifestProd.permissions.push('https://keeping-tabs.herokuapp.com/*');
+    manifestProd['name'] = manifestProd.name + ' PROD';
+    manifestProd['content_security_policy'] = 'script-src \'self\' https://keeping-tabs.herokuapp.com; object-src \'self\'';
+    manifestProd['permissions'].push('https://keeping-tabs.herokuapp.com/*');
 
     grunt.file.write('./chrome_ext/prod/manifest.json', JSON.stringify(manifestProd, null, 2));
 
     // Prepare Production manifest
     var manifestDev = grunt.file.readJSON(manifestFile);
 
-    manifestDev.name = manifestDev.name + ' DEV'
-    manifestDev.content_security_policy = "script-src 'self' http://localhost:8080; object-src 'self'";
-    manifestDev.permissions.push('http://localhost/*');
+    manifestDev['name'] = manifestDev.name + ' DEV';
+    manifestDev['content_security_policy'] = 'script-src \'self\' http://localhost:8080; object-src \'self\'';
+    manifestDev['permissions'].push('http://localhost/*');
 
     grunt.file.write('./chrome_ext/dev/manifest.json', JSON.stringify(manifestDev, null, 2));
   });

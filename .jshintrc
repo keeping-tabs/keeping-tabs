@@ -16,5 +16,6 @@
     "smarttabs": true,
     "white": true,
     "latedef": "nofunc",
-    "evil": true
+    "evil": true,
+    "sub": true
 }
