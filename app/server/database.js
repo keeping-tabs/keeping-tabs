@@ -8,10 +8,10 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 });
 
 db.serialize(function() {
-  //Uncomment to drop tables when restarting the server
-  db.run('DROP TABLE IF EXISTS links');
-  db.run('DROP TABLE IF EXISTS users');
-  db.run('DROP TABLE IF EXISTS users_links_join');
+  // //Uncomment to drop tables when restarting the server
+  // db.run('DROP TABLE IF EXISTS links');
+  // db.run('DROP TABLE IF EXISTS users');
+  // db.run('DROP TABLE IF EXISTS users_links_join');
 
   db.run('CREATE TABLE IF NOT EXISTS links (id INTEGER PRIMARY KEY ASC, title TEXT, url TEXT UNIQUE, created INTEGER)');
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, created INTEGER)');
@@ -177,7 +177,7 @@ db.saveUrls = function (urls) {
 };
 
 db.saveLinks = function (links, username) {
-    console.log(username);
+    console.log('username:', username);
   if (!(Array.isArray(links))) {
     throw new Error('expected links argument to be an array. Instead typeof links === ' + typeof links);
   } else if (links.length === 0) {
@@ -188,27 +188,36 @@ db.saveLinks = function (links, username) {
   return new Promise(function (resolve) {
     db.fetchUserId(username)
     .then(function (userId) {
-      console.log(userId);
+      console.log('userId:', userId);
       links.forEach(function (link, index) {
-        console.log('link: ',link);
-        db.insertInto('links', [link.title, link.url, Date.now()], true)
+        db.fetchTable('links', 'id', 'url="' + link.url + '"')
+        .then(function (ids) {
+          console.log('ids: ', ids);
+          console.log('link:', link);
+          if (ids.length === 0) {
+           return db.insertInto('links', [link.title, link.url, Date.now()], true)
+          }
+          return Promise.resolve();
+        })
         .then(function () {
           return db.fetchLinkId(link.url);
         })
         .then(function (linkId) {
-          console.log(linkId);
+          console.log('linkId:', linkId);
+          console.log('userId:', userId);
           return db.saveUrlUserJoin(userId[0].id, linkId[0].id);
         })
-        .then(log)
+        // .then(log)
        
 
-       .then(function () {
-        if (index === links.length - 1) {
-          // console.log('' + (index + 1) + ' links were saved');
-          resolve('' + links.length + ' links were saved');
-        }
-       });
-    });
+        .then(function () {
+          console.log('index:', index);
+          if (index === links.length - 1) {
+            // console.log('' + (index + 1) + ' links were saved');
+            resolve('' + links.length + ' links were saved');
+          }
+        });
+      });
     });
   });
 
@@ -228,55 +237,43 @@ db.fetchLinkId = function (url) {
 
 
 
-
-
+/*
 var log = function (data, message) {
   console.log(data, message ? message : ' : resolved in promise');
   return Promise.resolve(data);
 };
-
 // Save Users
 db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(log)
-
 // then fetch the users
 .then(db.fetchUsers)
 .then(log)
-
-
 // save urls
 .then(function () {
   return db.saveUrls(['a','b','c']);
 })
 .then(log)
-
 // then fetch the urls
 .then(function (){
   return db.fetchUrls()
   .then(log);
 })
-
 .then(function () {
-
   console.log('attempt to save user-url join');
   return db.saveUrlUserJoin(1, 1)
   .then(log)
-
   .then(function (){
     return db.saveUrlUserJoin(1, 3);
   })
   .then(log)
-
   .then(function (){
     return db.saveUrlUserJoin(2, 3);
   })
   .then(log)
-
   .then(function (){
     return db.saveUrlUserJoin(2, 2);
   })
   .then(log)
-
   .then(function (){
     return db.saveUrlUserJoin(3, 1);
   })
@@ -286,8 +283,6 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
   return db.fetchUserId('louie');
 })
 .then(log)
-
-
 .then(function () {
   return db.joinTable('users', 'users_links_join', ' users.username="louie" and users.id = users_links_join.userId', 'INNER', 'linkId');
 })
@@ -296,7 +291,6 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
   return db.fetchLinksForUser('louie');
 })
 .then(log)
-
 .then(function () {
   console.log('using save links');
   return db.saveLinks([{url:'d', title:'D'}, {url:'e', title:'E'}, {url:'f', title:'F'}], 'louie');
@@ -306,7 +300,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
   return db.fetchLinksForUser('louie');
 })
 .then(log);
-
+*/
 
 
 
@@ -316,8 +310,5 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 
 
 module.exports = db;
-
-
-
 
 
