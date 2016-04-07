@@ -82,7 +82,7 @@
       chrome.browserAction.setBadgeBackgroundColor({color: '#00FFFF'});
     } else {
       $btnActivate.text('Activate');
-      
+
       chrome.browserAction.setBadgeText({text: 'off'});
       chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     }
