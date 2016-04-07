@@ -6,7 +6,23 @@
 
   port.postMessage('I am popup');
 
-  $('.js-input-time').on('blur', function() {
-    console.log($(this).val());
+  var $btnSave = $('.js-btn-save');
+  var $inputTime = $('.js-input-time');
+
+  port.onMessage.addListener(function(msg) {
+    if(msg.time) {
+      console.log('set time: ', msg.time);
+      $inputTime.val(msg.time);
+    }
+  });
+
+  $btnSave.on('click', function() {
+    var time = Number($inputTime.val());
+    console.log(time);
+    if(isNaN(time)) {
+      console.log('not a number');
+      return;
+    }
+    port.postMessage({time: $inputTime.val()});
   });
 })();
