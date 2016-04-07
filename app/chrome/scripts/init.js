@@ -31,6 +31,12 @@ $(function(){
     // getTab(postTabs);
   });
 
+  chrome.runtime.onConnect.addListener(function(port){
+    port.onMessage.addListener(function(msg) {
+      console.log('msg from popup: ', msg)
+    });
+  });
+
   // function getTab(callback){
   //   chrome.tabs.query({
   //     active: true,
