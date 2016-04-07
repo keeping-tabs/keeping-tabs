@@ -14,7 +14,6 @@
     "tabs"
   ],
   "background": {
-    "page": "background.html",
-    "persistent": false
+    "page": "background.html"
   }
 }

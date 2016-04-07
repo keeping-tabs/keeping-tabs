@@ -11,29 +11,64 @@ exports.init = function() {
   var queue = new Queue();
   var timer = Object.create(Timer);
 
-
   var currentTabs = {};
+
+  addAllListeners();
 
   // popup settings
   chrome.runtime.onConnect.addListener(function(port){
     if(port.name === 'popup_setting') {
       
-      port.postMessage({time: timer.timeLimit}); // set UI init time
+      port.postMessage({ // UI init settings
+        time: timer.timeLimit,
+        active: timer.isActive
+      });
       
       port.onMessage.addListener(function(msg) {
-        console.log('msg from popup: ', msg);
 
-        timer.timeLimit = msg.time;
-        console.log('time limit updated: ', timer.timeLimit);
+        console.log('msg from popup: ', msg);
+        
+        if(msg.time !== undefined) {
+          timer.timeLimit = msg.time;
+          console.log('time limit updated: ', timer.timeLimit);
+          port.postMessage({time: timer.timeLimit}); // respond with new time
+        }
+        
+        if(msg.active !== undefined) {
+          if(!msg.active) {
+            removeAllListeners();
+            timer.deactivate();
+            port.postMessage({active: false});
+          } else {
+            addAllListeners();
+            timer.initialize(queue);
+            port.postMessage({active: true});
+          }
+          console.log('extension active: ', msg.active);
+        }
       });
     }
   });
 
-  chrome.tabs.onCreated.addListener(function(tab){
-  	console.log('created: ', tab.id);
+  function addAllListeners() {
+    chrome.tabs.onCreated.addListener(handleOnCreated);
+    chrome.tabs.onUpdated.addListener(handleOnUpdated);
+    chrome.tabs.onActivated.addListener(handleOnActivated);
+    chrome.tabs.onRemoved.addListener(handleOnRemoved);
+  }
+
+  function removeAllListeners() {
+    chrome.tabs.onCreated.removeListener(handleOnCreated);
+    chrome.tabs.onUpdated.removeListener(handleOnUpdated);
+    chrome.tabs.onActivated.removeListener(handleOnActivated);
+    chrome.tabs.onRemoved.removeListener(handleOnRemoved);
+  }
+
+  function handleOnCreated(tab){
+    console.log('created: ', tab.id);
     Chrome.setData(tab)
     .then(function (dataObj) {
-    	// var oldTab = currentTab;
+      // var oldTab = currentTab;
       Chrome.updateCurrentTabs(queue, currentTabs)
       .then(Chrome.getActiveTabs)
       .then(Chrome.mapToTabIds)
@@ -52,9 +87,9 @@ exports.init = function() {
         }
       });
     });
-  });
+  }
 
-  chrome.tabs.onUpdated.addListener(function(tabId){
+  function handleOnUpdated(tabId){
     Chrome.getTab(tabId)
     .then(Chrome.setData)
     .then(function (dataObj) {
@@ -62,10 +97,10 @@ exports.init = function() {
       console.log('updated: ', dataObj.tab.id);
       currentTabs[dataObj.tab.id] = dataObj;
     });
-  });
+  }
 
-  chrome.tabs.onActivated.addListener(function(activeInfo){
-  	// find tab in queue using tabId (given in activeInfo),
+  function handleOnActivated(activeInfo){
+    // find tab in queue using tabId (given in activeInfo),
     var tabId = activeInfo.tabId;
 
     Chrome.getTab(tabId)
@@ -91,11 +126,11 @@ exports.init = function() {
         }
       });
     });
-  });
+  }
 
-  chrome.tabs.onRemoved.addListener(function(tabId){
-  	queue.delete(String(tabId));
+  function handleOnRemoved(tabId){
+    queue.delete(String(tabId));
     timer.initialize(queue);
-  });
+  }
     
 };

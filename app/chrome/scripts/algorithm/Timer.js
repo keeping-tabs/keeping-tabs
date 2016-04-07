@@ -3,10 +3,12 @@
 var Chrome = require('./ChromeHelpers.js');
 
 var Timer = {
+  isActive: false,
   timeout: setTimeout(function() {}, 0),
   timeLimit: 1000 * 5,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
   initialize: function (queue, time) {
     clearTimeout(this.timeout);
+    this.isActive = true;
   
     this.timeLimit = time || this.timeLimit;
 
@@ -26,6 +28,7 @@ var Timer = {
   },
   deactivate: function() {
     clearTimeout(this.timeout);
+    this.isActive = false;
   },
   removeTab: function (queue) {
     var tab = queue.dequeue();
