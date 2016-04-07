@@ -85,7 +85,12 @@ module.exports = function(grunt) {
 
     watch: {
       chrome: {
-        files: ['./app/chrome/scripts/**/*.js'],
+        files: [
+          './app/chrome/**/*.js',
+          '!./app/chrome/dist/*.js',
+          './app/chrome/**/*.css',
+          '!./app/chrome/dist/*.css'
+        ],
         tasks: ['jshint:chrome', 'mocha:chrome', 'mochaTest:chrome', 'build-chrome']
       },
       server: {
