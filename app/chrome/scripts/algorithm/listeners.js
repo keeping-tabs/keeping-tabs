@@ -18,10 +18,10 @@ exports.init = function() {
   // popup settings
   chrome.runtime.onConnect.addListener(function(port){
     if(port.name === 'popup_setting') {
-      
+
       port.postMessage({ // UI init settings
         time: timer.timeLimit,
-        active: timer.isActive
+        active: true // hard code need to refactor Timer module
       });
       
       port.onMessage.addListener(function(msg) {
