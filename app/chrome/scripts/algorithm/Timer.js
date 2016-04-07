@@ -5,8 +5,11 @@ var Chrome = require('./ChromeHelpers.js');
 var Timer = {
   timeout: setTimeout(function() {}, 0),
   timeLimit: 1000 * 5,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
-  initialize: function (queue) {
+  initialize: function (queue, time) {
     clearTimeout(this.timeout);
+  
+    this.timeLimit = time || this.timeLimit;
+
     if(queue.first === -1){
       // console.log('the queue is now empty');
       return null;
@@ -20,6 +23,9 @@ var Timer = {
     else{
       this.timeout = setTimeout(this.removeTab.bind(this,queue), timeRemaining);
     }
+  },
+  deactivate: function() {
+    clearTimeout(this.timeout);
   },
   removeTab: function (queue) {
     var tab = queue.dequeue();
@@ -52,10 +58,10 @@ var Timer = {
               .then(function (bool) {
                 // console.log('tab is active: ' + bool);
                 if (!bool) {
-                  chrome.tabs.remove(Number(tab.key));  
+                  chrome.tabs.remove(Number(tab.key));
                   Chrome.postTabs([tab.data.url]);
                 }
-              }); 
+              });
             }
           });
 
