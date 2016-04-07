@@ -3,7 +3,7 @@ var server = require('../../index.js');
 var supertest = require('supertest');
 
 var request = supertest.agent(server);
-
+ 
 /*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit */
 
 describe('server', function() {

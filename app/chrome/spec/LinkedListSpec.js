@@ -1,9 +1,4 @@
 
-// require('../LinkedList.js');
-// var chai = require('chai');
-// var assert = require('assert');
-
-
 var assert = chai.assert;
 chai.should();
 var expect = chai.expect;

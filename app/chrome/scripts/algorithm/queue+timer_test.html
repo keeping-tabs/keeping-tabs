@@ -1,0 +1,63 @@
+<script src="Queue.js"></script>
+<script src="Timer.js"></script>
+<script >
+
+  var pseudoStorage = [
+	  ['google',{url: 'www.google.com'}],
+	  ['facebook',{url: 'www.facebook.com'}],
+	  ['amazon',{url: 'www.amazon.com'}],
+	  ['github',{url: 'www.github.com'}],
+	  ['slack',{url: 'www.slack.com'}],
+	  ['paypal',{url: 'www.paypal.com'}]
+  ];
+  var storage = [];
+  var generateQueueData = function (queue) {
+  	// console.log('Queue is being generated');
+  	return new Promise(function(resolve, reject){
+
+  		try{
+	  		var max = 0;
+	      pseudoStorage.forEach(function (val) {
+	      	var timeout = Math.floor(Math.random() * 1000);
+	      	max = max > timeout ? max : timeout;
+	        setTimeout(function () {
+	        	val[1].createdAt = Date.now();
+	        	queue.enqueue(val[0], val[1]);
+	        	storage.push(val);
+	        }, timeout);
+	      });
+	      setTimeout(function () {resolve(queue);}, max);
+
+  		} catch (error) {reject(error);}
+  	});
+  };
+
+
+
+
+
+// createdAt: function () {Date.now();
+
+	// var queue = new Queue;
+
+  generateQueueData(new Queue())
+  .then(function (queue) {
+    var timer = Object.create(Timer);
+
+    timer.initialize(queue);
+
+  	// console.log(
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	queue.dequeue(),
+  	// 	'\n',
+  	// 	pseudoStorage
+  	// );
+  });
+
+
+</script>

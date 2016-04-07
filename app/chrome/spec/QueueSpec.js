@@ -8,9 +8,6 @@ describe('Queue tests:', function () {
 	it('The Queue constructor should be a function', function () {
 		Queue.should.be.a('function');
 	});
-	it('The Queue constructor should be a function', function () {
-		Queue.should.be.a('function');
-	});
 	it('A queue should be an instance of the Queue constructor', function () {
     assert.equal((new Queue()) instanceof Queue, true);
 	});
