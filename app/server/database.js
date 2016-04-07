@@ -10,20 +10,6 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 db.serialize(function() {
   db.run('DROP TABLE IF EXISTS links');
   db.run('CREATE TABLE IF NOT EXISTS links (title TEXT, url TEXT UNIQUE, created TEXT)');
-
-  // var statement = db.prepare("INSERT INTO links VALUES ($title, $url, $created)");
-  // for (var i = 0; i < 10; i++) {
-  //     statement.run({
-  //       $title: "Ipsum " + i,
-  //       $url: 'http://apple.com',
-  //       $created: Date.now()
-  //     });
-  // }
-  // statement.finalize();
-
-  // db.each("SELECT * FROM links", function(err, link) {
-  //     console.log(link.title + ": " + link.url + "--" + Date(link.created));
-  // });
 });
 
 
