@@ -42,35 +42,43 @@ module.exports = function(grunt) {
     jshint: {
       options: {
         force: 'true',
-        jshintrc: './.jshintrc'
+        jshintrc: true
       },
 
-      all: {
+      tests: {
+        options: {
+          jshintrc: './.jshintrc_spec'
+        },
         files: {
-          src: [
-            './app/server/**/*.js', // server
-            './app/client/**/*.js', // client
-            './app/chrome/scripts/**/*.js', // chrome extension scripts
-            './Gruntfile.js'
-          ]
+          src: ['./app/**/spec/*.js']
         }
       },
 
       chrome: {
         files: {
-          src: ['./app/chrome/scripts/**/*.js']
+          src: [
+            './app/chrome/scripts/**/*.js',
+            '!./app/chrome/scripts/spec/*.js'
+          ]
         }
       },
 
       server: {
         files: {
-          src: ['./app/server/**/*.js', './app/server/index.js']
+          src: [
+            './app/index.js',
+            './app/server/**/*.js',
+            '!./app/server/spec/*.js'
+          ]
         }
       },
 
       client: {
         files: {
-          src: ['./app/client/**/*.js']
+          src: [
+            './app/client/**/*.js',
+            '!./app/client/spec/*.js'
+          ]
         }
       }
     },
@@ -81,7 +89,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:chrome', 'mocha:chrome', 'mochaTest:chrome', 'build-chrome']
       },
       server: {
-        files: ['./app/server/**/*.js', './app/server/index.js'],
+        files: ['./app/server/**/*.js', './app/index.js'],
         tasks: ['jshint:server', 'mochaTest:server']
       },
       client: {

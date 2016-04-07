@@ -1,5 +1,8 @@
 {
-  "node": true,
+  "browser": true,
+  "devel": true,
+  "jquery": true,
+  "browserify": true,
   "esnext": true,
   "bitwise": true,
   "camelcase": true,
@@ -15,5 +18,7 @@
   "smarttabs": true,
   "white": true,
   "latedef": "nofunc",
-  "sub": true
+  "globals": {
+    "chrome": false
+  }
 }

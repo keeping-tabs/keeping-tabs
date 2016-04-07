@@ -33,7 +33,7 @@ $(function(){
 
   chrome.runtime.onConnect.addListener(function(port){
     port.onMessage.addListener(function(msg) {
-      console.log('msg from popup: ', msg)
+      console.log('msg from popup: ', msg);
     });
   });
 
