@@ -1,3 +1,6 @@
+
+/* globals chrome: false */
+
 //assumes instance of Queue exists
 var Queue = require('./Queue.js');
 var Timer = require('./Timer.js');

@@ -18,15 +18,15 @@ $(function(){
           .then(function (dataObj) {
             urls.push(dataObj.data.url);
             if (index === tabs.length - 1) {
-              resolve(urls)
+              resolve(urls);
             }
-          })
-        })
+          });
+        });
       }).then(function (urls) {
         return Promise.resolve(urls);
       })
-      .then(postTabs);
-    })
+      .then(Chrome.postTabs);
+    });
 
 
     // getTab(postTabs);

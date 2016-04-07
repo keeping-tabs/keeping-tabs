@@ -1,3 +1,6 @@
+
+/* globals $: false, chrome: false, ENV: false */
+
 //////////  //////////  //////////  //////////  //////////  
 // helper functions
 
@@ -16,7 +19,7 @@ var Chrome = (function () {
       });
     },
     getTab : function (tabId) {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
         try {
           chrome.tabs.get(tabId, resolve);
           // resolves the tab
@@ -46,8 +49,9 @@ var Chrome = (function () {
       });
     },
     setData : function (tab) {
+      var data = {};
       try {
-        var data = {
+        data = {
           url: tab.url,
           createdAt: Date.now()
         };
@@ -59,12 +63,20 @@ var Chrome = (function () {
 
     updateCurrentTabs : function (queue, currentTabs) {
       return new Promise(function (resolve, reject) {
+        var deleteTabIfItDoesnotExist = function (bool) {
+          if (!bool) {
+            delete currentTabs[tabId];
+            queue.delete(tabId);
+          }
+        };
+
         try {
           Chrome.getAllTabs()
           .then(Chrome.mapToTabIds)
           .then(function (tabIds) {
             for (var tabId in currentTabs) {
               Chrome.containsId(tabIds, Number(tabId))
+              // .then(deleteTabIfItDoesnotExist);
               .then(function (bool) {
                 if (!bool) {
                   delete currentTabs[tabId];
@@ -82,8 +94,9 @@ var Chrome = (function () {
 
     findOldTabId : function (tabIds, currentTabs) {
       console.log(tabIds, currentTabs);
+      var oldTabId = [];
       try {
-        var oldTabId = Object.keys(currentTabs).filter(function (tabId) {
+        oldTabId = Object.keys(currentTabs).filter(function (tabId) {
           return tabIds.some(function (id) {
             return String(id) !== tabId;    
           });
@@ -102,19 +115,21 @@ var Chrome = (function () {
 
 
     mapToTabIds : function (tabs) {
+      var tabIds = [];
       try {
-        var tabIds = tabs.map(function (tab) {return tab.id;});
+        tabIds = tabs.map(function (tab) {return tab.id;});
       } catch (error) {
         return Promise.reject(error);
       }
-      console.log(tabs, tabIds);
+      // console.log(tabs, tabIds);
       return Promise.resolve(tabIds);
       // return Promise.resolve(100);
     },
 
     containsId : function (tabIds, id) {
+      var bool = 'false';
       try{
-        var bool = tabIds.some(function (tabId) {return tabId === id;});
+        bool = tabIds.some(function (tabId) {return tabId === id;});
       } catch (error) {
         return Promise.reject(error);
       }

@@ -1,4 +1,5 @@
 
+/* globals chrome: false */
 var Chrome = require('./ChromeHelpers.js');
 
 var Timer = {
@@ -56,7 +57,7 @@ var Timer = {
                 }
               }); 
             }
-          })
+          });
 
 
     } catch (error) {
