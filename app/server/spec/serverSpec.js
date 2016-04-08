@@ -64,4 +64,58 @@ describe('server', function() {
         .expect(201, done);
     });
   });
+
+
+  describe('database tests', function () {
+    var usernames = ['louie', 'jake', 'justin', 'ivan'];
+    var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
+
+    var urls = [
+      'https://www.google.com',
+      'https://www.amazon.com',
+      'https://www.facebook.com',
+      'https://www.paypal.com',
+      'https://www.github.com',
+      'https://www.slack.com',
+      'https://www.wikipedia.com',
+      'https://www.dictionary.com',
+      'https://www.ebay.com',
+      'https://www.cnn.com'
+    ];
+
+    var usersUrls = {
+      louie: [0, 1, 6, 8],
+      jake: [3, 5, 6, 9],
+      justin: [0, 1, 2, 4],
+      ivan: [2, 5, 7, 9]
+    };
+
+
+    for (var user in users) {
+      users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];});
+    }
+    
+
+
+    var userIndex = 0;
+    it('initialize the user data', function(done) {
+      // recursively post the testing user data
+      var postUser = function (user) {
+        request
+        .post('/links')
+        .send(users[user])
+        .expect(201, function () {
+          if (usernames.length > 0) {
+            postUser(usernames.shift());
+          } else {
+            done();
+          }
+        });
+      };
+      postUser(usernames.shift());
+    });
+  });
+
+
+
 });
