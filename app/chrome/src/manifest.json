@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+
+  "name": "KeepinTabs",
+  "description": "This extension organizes a users browser tabs",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "keeping-tabsicon.png",
+    "default_popup": "popup.html",
+    "default_title": "Click for settings"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "page": "background.html"
+  }
+}

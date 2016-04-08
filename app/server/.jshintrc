@@ -14,6 +14,5 @@
   "trailing": true,
   "smarttabs": true,
   "white": true,
-  "latedef": "nofunc",
-  "sub": true
+  "latedef": "nofunc"
 }
