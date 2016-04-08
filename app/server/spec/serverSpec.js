@@ -67,7 +67,8 @@ describe('server', function() {
 
 
   describe('database tests', function () {
-    var users = ['louie, jake, ivan, justin'];
+    var usernames = ['louie', 'jake', 'justin', 'ivan'];
+    var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
 
     var urls = [
       'https://www.google.com',
@@ -83,18 +84,35 @@ describe('server', function() {
     ];
 
     var usersUrls = {
-      0: [0, 1, 3, 4, 6, 8],
-      1: [1, 2, 3, 5, 6, 9],
-      2: [0, 1, 2, 5, 7, 8],
-      3: [0, 2, 5, 7, 8, 9]
+      louie: [0, 1, 6, 8],
+      jake: [3, 5, 6, 9],
+      justin: [0, 1, 2, 4],
+      ivan: [2, 5, 7, 9]
     };
+
+
+    for (var user in users) {
+      users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];})
+    }
+    
+
+
     var userIndex = 0;
-    it('POST /links', function(done) {
-      request
-      .post('/links')
-      // .send({ urls: ['http://google.com'] })
-      .send({ urls: usersUrls[userIndex].map(function (urlIndex) {return urls[urlIndex];}) })
-      .expect(201, done);
+    it('initialize the user data', function(done) {
+      // recursively post the testing user data
+      var postUser = function (user) {
+        request
+        .post('/links')
+        .send(users[user])
+        .expect(201, function () {
+          if (usernames.length > 0) {
+            postUser(usernames.shift());
+          } else {
+            done();
+          }
+        });
+      };
+      postUser(usernames.shift());
     });
   });
 

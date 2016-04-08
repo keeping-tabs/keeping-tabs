@@ -30,26 +30,21 @@ var db = require('./database.js');
 var _ = require('underscore');
 
 
-var setUrls = function (urls) {
-  return new Promise(function (resolve, reject) {
-    // tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
-    // tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
-    db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
+var filterNewLinksOnly = function (urls) {
+  return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
     .then(function (data) {
       var existingUrls = data.map(function (element) {return element.url;});
-      console.log('existingUrls: ', existingUrls);
-      // return Promise.resolve(
-        var difference = _.difference(urls, existingUrls);
-        console.log('difference: ', difference);
-        //);
+      var difference = _.difference(urls, existingUrls);
       return Promise.resolve(difference);
-    })
+    });
+};
+
+var setUrls = function (urls) {
+  return new Promise(function (resolve, reject) {
+    filterNewLinksOnly(urls)
     .then(db.saveUrls)
     .then(resolve)
     .catch(reject);
-
-    // reject('issue in tempSetUrls complete method');// currently executing synchronously this line should not fire. 
-    // If it does then there was an issue firing the complete method on the tempSetUrls function
   });
 };
 
@@ -63,13 +58,6 @@ exports.linksPost = function (request, response) {
       response.sendStatus(201);
     })
     .catch(function (error) {
-
-      if (error.errno === 19 && error.code === 'SQLITE_CONSTRAINT') {
-        // this condition is met when non unique data is posted to the database
-        // we should probably check before trying to post to avoid this error
-        response.sendStatus(418);
-      }
-
       response.sendStatus(400);
     });
 };
