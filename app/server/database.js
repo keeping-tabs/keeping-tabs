@@ -150,6 +150,9 @@ db.fetchUsers = function () {
   return db.fetchTable('users');
 };
 
+db.fetchUserId = function (user) {
+  return db.fetchTable('users', 'id', 'username="' + user + '"');
+};
 
 
 db.saveUrls = function (urls) {
@@ -173,6 +176,44 @@ db.saveUrls = function (urls) {
   });
 };
 
+db.saveLinks = function (links, username) {
+    console.log(username);
+  if (!(Array.isArray(links))) {
+    throw new Error('expected links argument to be an array. Instead typeof links === ' + typeof links);
+  } else if (links.length === 0) {
+    return Promise.resolve('' + links.length + ' users were saved');
+  }
+
+
+  return new Promise(function (resolve) {
+    db.fetchUserId(username)
+    .then(function (userId) {
+      console.log(userId);
+      links.forEach(function (link, index) {
+        console.log('link: ',link);
+        db.insertInto('links', [link.title, link.url, Date.now()], true)
+        .then(function () {
+          return db.fetchLinkId(link.url);
+        })
+        .then(function (linkId) {
+          console.log(linkId);
+          return db.saveUrlUserJoin(userId[0].id, linkId[0].id);
+        })
+        .then(log)
+       
+
+       .then(function () {
+        if (index === links.length - 1) {
+          // console.log('' + (index + 1) + ' links were saved');
+          resolve('' + links.length + ' links were saved');
+        }
+       });
+    })
+    });
+  });
+
+};
+
 
 
 
@@ -181,6 +222,9 @@ db.fetchUrls = function () {
   return db.fetchTable('links');
 };
 
+db.fetchLinkId = function (url) {
+  return db.fetchTable('links', 'id', 'url="' + url + '"');
+};
 
 
 
@@ -239,7 +283,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
   .then(log);
 })
 .then(function () {
-  return db.fetchTable('users', 'id', 'username="louie"');
+  return db.fetchUserId('louie');
 })
 .then(log)
 
@@ -251,7 +295,19 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(function () {
   return db.fetchLinksForUser('louie')
 })
+.then(log)
+
+.then(function () {
+  console.log('using save links');
+  return db.saveLinks([{url:'d', title:'D'}, {url:'e', title:'E'}, {url:'f', title:'F'}], 'louie');
+})
+.then(function () {
+  console.log('fetch');
+  return db.fetchLinksForUser('louie')
+})
 .then(log);
+
+;
 
 
 

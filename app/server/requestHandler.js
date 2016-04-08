@@ -53,8 +53,6 @@ exports.linksPost = function (request, response) {
   console.log('url: ', request.body.urls);
   setUrls(request.body.urls)
     .then(function () {
-      // console.log(success);
-      // console.log(tempUrls);
       response.sendStatus(201);
     })
     .catch(function (error) {
