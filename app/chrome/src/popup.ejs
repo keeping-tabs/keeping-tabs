@@ -1,17 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" type="text/css" href="<%= url %>/chrome/dist/popup.css">
-<title></title>
-</head>
-<body>
-<div style="width:320px">
-<label>Close and save tabs older than</label>
-<input class="js-input-time" type="text" placeholder="Time in miliseconds...">
-<button class="js-btn-save">Save</button>
-<button class="js-toggle-activate">Deactivate</button>
-</div>
-<script type="text/javascript" src="<%= url %>/chrome/dist/vendors.js"></script>
-<script type="text/javascript" src="<%= url %>/chrome/dist/popup.js"></script>
-</body>
+  <head>
+    <link rel="stylesheet" type="text/css" href="<%= url %>/chrome/dist/popup.css">
+    <title></title>
+  </head>
+  <body>
+    <div class="kt-popup f5">
+      <legend class="db pa2 f6 gray">Automatically close and save tabs older than</legend>
+      <div class="f6 db w-100 pa2 js-radio-time">
+        <label class="mr2"><input type="radio" name="time" value="60"> 60mins</label>
+        <label class="mr2"><input type="radio" name="time" value="90"> 90mins</label>
+        <label class="mr2"><input type="radio" name="time" value="120"> 120mins</label>
+        <a href="#" class="link js-show-custom">Customize</a>
+      </div>
+      
+      <section class="pa2 js-custom">
+        <input class="db w-100 pa2 ba b--light-silver js-input-time" type="text" placeholder="Time in miliseconds...">
+        <label class="f6 gray db mv2">Custom time in milliseconds</label>
+      </section>
+
+      <div class="kt-btns cf">
+        <button class="kt-btn w-50 fl js-btn-save">Save</button>
+        <button class="kt-btn w-50 fr js-toggle-activate">Deactivate</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="<%= url %>/chrome/dist/vendors.js"></script>
+    <script type="text/javascript" src="<%= url %>/chrome/dist/popup.js"></script>
+  </body>
 </html>

@@ -14,7 +14,12 @@
   var $btnSave = $('.js-btn-save');
   var $inputTime = $('.js-input-time');
   var $btnActivate = $('.js-toggle-activate');
+
+  var $btnShowCustom = $('.js-show-custom');
+  var $custom = $('.js-custom');
   
+  $custom.hide();
+
   // listen to background
   port.onMessage.addListener(function(msg) {
     console.log('msg from background: ', msg);
@@ -42,6 +47,10 @@
 
   $btnActivate.on('click', function() {
     port.postMessage({active: !_settings.active});
+  });
+
+  $btnShowCustom.on('click', function() {
+    $custom.toggle();
   });
 
   function render() {
