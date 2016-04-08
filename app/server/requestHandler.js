@@ -28,12 +28,10 @@
 
 var db = require('./database.js');
 var _ = require('underscore');
-<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
+var urlModule = require('url');
 
-=======
->>>>>>> working on database server specs dummy user data
 
-var filterNewLinksOnly = function (urls) {
+var filterNewUrlsOnly = function (urls) {
   return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
     .then(function (data) {
       var existingUrls = data.map(function (element) {return element.url;});
@@ -44,32 +42,70 @@ var filterNewLinksOnly = function (urls) {
 
 var setUrls = function (urls) {
   return new Promise(function (resolve, reject) {
-<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
-    filterNewLinksOnly(urls)
-=======
-    // tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
-    // tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
-    db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
-    .then(function (data) {
-      var existingUrls = data.map(function (element) {return element.url;});
-      console.log('existingUrls: ', existingUrls);
-      // return Promise.resolve(
-        var difference = _.difference(urls, existingUrls);
-        console.log('difference: ', difference);
-        //);
-      return Promise.resolve(difference);
-    })
->>>>>>> working on database server specs dummy user data
+    filterNewUrlsOnly(urls)
     .then(db.saveUrls)
     .then(resolve)
     .catch(reject);
   });
 };
 
+var setLinks = function (links, username) {
+  return db.saveLinks(links, username);
+  // return new Promise(function (resolve, reject) {
+  //   filterNewUrlsOnly(links.map(function (link) {return link.url;}))
+  //   .then(function (newUrls) {
+  //     console.log('new: ',newUrls);
+  //     return new Promise(function (resolve) {
+  //       var newLinks = links.filter(function (link) {
+  //         return newUrls.some(function (url) {return url === link.url;});
+  //       });
+  //       var oldLinks = _.difference(links, newLinks);
+
+  //       console.log('old: ', oldLinks);
+  //       console.log('username: ', username);
+  //       db.fetchUserId(username)
+  //       .then(function (userId) {
+  //         console.log(userId);
+  //         if (oldLinks.length === 0) {resolve(newLinks);}
+  //         oldLinks.forEach(function (link) {
+  //           db.fetchLinkId(link.url)
+  //           .then(function (linkId) {
+  //             return db.saveUrlUserJoin(userId[0].id, linkId[0].id);
+  //           })
+  //           .then(function () {
+  //           if (index === links.length - 1) {
+  //             // console.log('' + (index + 1) + ' links were saved');
+  //             resolve(newLinks);
+  //           }
+  //          });
+  //         });
+  //       });
+  //     })
+  //     .then(function (message) {console.log('new Links: ',message);return Promise.resolve(message);})
+  //     .then(resolve);
+  //   })
+
+
+  // })
+  // .then(function (links) {
+  //   console.log('links: ', links);
+  //   db.saveLinks(links, username);}
+  // )
+  // .then(resolve)
+  // .catch(reject);
+};
+
 
 exports.linksPost = function (request, response) {
-  console.log('url: ', request.body.urls);
-  setUrls(request.body.urls)
+  var urls = request.body.urls;
+  console.log('url: ', urls);
+  var username = request.body.username;
+  // if (!username) {response.sendStatus(400); return null;}
+// console.log('username: ', username);
+  // console.log(urlModule.parse(urls[0]).host.split('.')[1]);
+ 
+  // setUrls(urls)
+  setLinks(urls.map(function (url) {return {url: url, title: urlModule.parse(url).host.split('.')[1]};}), username)
     .then(function () {
       response.sendStatus(201);
     })
@@ -98,7 +134,10 @@ exports.linksGet = function (request, response) {
 
 
 exports.urls = function (req, res) {
-  db.fetchUrls()
+  var username = req.query.username;
+  console.log('username:', username);
+  // db.fetchUrls()
+  db.fetchLinksForUser(username)
     .then(function (data) {
       var urls = convertUrlDataToUrlArray(data);
       res.render('links', { title: 'Hey', message: 'Hello there!', 
@@ -131,13 +170,5 @@ function convertUrlDataToUrlArray(data) {
     return link.url;
   });
 }
-
-
-
-
-
-
-
-
 
 

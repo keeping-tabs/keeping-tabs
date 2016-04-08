@@ -3,7 +3,7 @@ var server = require('../../index.js');
 var supertest = require('supertest');
 
 var request = supertest.agent(server);
- 
+var db = require('../database.js');
 /*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit */
 
 describe('server', function() {
@@ -57,22 +57,23 @@ describe('server', function() {
   });
 
   describe('API', function() {
+    it('create a temp user', function () {
+      db.saveUsers(['temp']);
+    });
+
     it('POST /links', function(done) {
       request
         .post('/links')
-        .send({ urls: ['http://apple.com'] })
+        .send({ urls: ['http://apple.com'], username: 'temp' })
         .expect(201, done);
     });
   });
 
 
   describe('database tests', function () {
-<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
     var usernames = ['louie', 'jake', 'justin', 'ivan'];
-    var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
-=======
-    var users = ['louie, jake, ivan, justin'];
->>>>>>> working on database server specs dummy user data
+    db.saveUsers(usernames);
+    var users = {louie: {username: 'louie'}, jake: {username: 'jake'}, ivan: {username: 'ivan'}, justin: {username: 'justin'}};
 
     var urls = [
       'https://www.google.com',
@@ -88,7 +89,6 @@ describe('server', function() {
     ];
 
     var usersUrls = {
-<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
       louie: [0, 1, 6, 8],
       jake: [3, 5, 6, 9],
       justin: [0, 1, 2, 4],
@@ -105,6 +105,7 @@ describe('server', function() {
     var userIndex = 0;
     it('initialize the user data', function(done) {
       // recursively post the testing user data
+      
       var postUser = function (user) {
         request
         .post('/links')
@@ -117,21 +118,10 @@ describe('server', function() {
           }
         });
       };
-      postUser(usernames.shift());
-=======
-      0: [0, 1, 3, 4, 6, 8],
-      1: [1, 2, 3, 5, 6, 9],
-      2: [0, 1, 2, 5, 7, 8],
-      3: [0, 2, 5, 7, 8, 9]
-    };
-    var userIndex = 0;
-    it('POST /links', function(done) {
-      request
-      .post('/links')
-      // .send({ urls: ['http://google.com'] })
-      .send({ urls: usersUrls[userIndex].map(function (urlIndex) {return urls[urlIndex];}) })
-      .expect(201, done);
->>>>>>> working on database server specs dummy user data
+      // db.saveUsers(usernames)//.then(function (message) {console.log(message);console.log('users saved');})
+      // .then(function () {
+        postUser(usernames.shift());
+      // })
     });
   });
 
