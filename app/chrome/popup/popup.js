@@ -12,11 +12,12 @@
   port.postMessage('I am popup');
 
   var $btnSave = $('.js-btn-save');
-  var $inputTime = $('.js-input-time');
   var $btnActivate = $('.js-toggle-activate');
+  var $radioTime = $('.js-radio-time input');
 
   var $btnShowCustom = $('.js-show-custom');
   var $custom = $('.js-custom');
+  var $inputTime = $('.js-input-time');
   
   $custom.hide();
 
@@ -35,14 +36,23 @@
     render();
   });
 
-  $btnSave.on('click', function() {
-    var time = Number($inputTime.val());
-    console.log(time);
+  $radioTime.on('change', function() {
+    var time = Number($(this).val()) * 60 * 1000; // min to millisec
+    _settings.time = time;
+  });
+
+  $inputTime.on('blur', function() {
+    var time = Number($(this).val());
     if(isNaN(time)) {
       console.log('not a number');
       return;
     }
-    port.postMessage({time: $inputTime.val()});
+    _settings.time = time;
+    render();
+  });
+
+  $btnSave.on('click', function() {
+    port.postMessage({time: _settings.time});
   });
 
   $btnActivate.on('click', function() {
@@ -57,6 +67,14 @@
 
     $inputTime.val(_settings.time);
 
+    $radioTime.each(function() {
+      var time = _settings.time / 60 / 1000; // millisec to min
+
+      if(Number($(this).val()) === time) {
+        $(this).prop('checked', true);
+      }
+    });
+
     if(_settings.active) {
       $btnActivate.text('Deactivate');
 
@@ -68,5 +86,6 @@
       chrome.browserAction.setBadgeText({text: 'off'});
       chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     }
+
   }
 })();

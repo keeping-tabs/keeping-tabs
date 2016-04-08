@@ -5,7 +5,7 @@ var Chrome = require('./ChromeHelpers.js');
 var Timer = {
   isActive: false,
   timeout: setTimeout(function() {}, 0),
-  timeLimit: 1000 * 5,// 1000 * 60 * 60 * 3, //default 3 hr timelimit
+  timeLimit: 1000 * 60 * 60, //default 60 mins timelimit
   initialize: function (queue, time) {
     clearTimeout(this.timeout);
     this.isActive = true;
