@@ -86,5 +86,6 @@
       chrome.browserAction.setBadgeText({text: 'off'});
       chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     }
+
   }
 })();
