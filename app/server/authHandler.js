@@ -24,3 +24,5 @@ var Auth = function() {
 
   }
 };
+
+module.exports = Auth();

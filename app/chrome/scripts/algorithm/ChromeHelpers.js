@@ -11,7 +11,7 @@ var Chrome = (function () {
       return new Promise(function(resolve,reject){
         $.ajax({
           type: 'POST',
-          url: ENV.url + '/links',
+          url: ENV.url + '/api/links',
           data: {urls: urls},
           success: resolve
         })

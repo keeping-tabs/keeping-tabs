@@ -57,9 +57,9 @@ describe('server', function() {
   });
 
   describe('API', function() {
-    it('POST /links', function(done) {
+    it('POST /api/links', function(done) {
       request
-        .post('/links')
+        .post('/api/links')
         .send({ urls: ['http://apple.com'] })
         .expect(201, done);
     });
