@@ -28,7 +28,10 @@
 
 var db = require('./database.js');
 var _ = require('underscore');
+<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
 
+=======
+>>>>>>> working on database server specs dummy user data
 
 var filterNewLinksOnly = function (urls) {
   return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
@@ -41,7 +44,22 @@ var filterNewLinksOnly = function (urls) {
 
 var setUrls = function (urls) {
   return new Promise(function (resolve, reject) {
+<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
     filterNewLinksOnly(urls)
+=======
+    // tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
+    // tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
+    db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
+    .then(function (data) {
+      var existingUrls = data.map(function (element) {return element.url;});
+      console.log('existingUrls: ', existingUrls);
+      // return Promise.resolve(
+        var difference = _.difference(urls, existingUrls);
+        console.log('difference: ', difference);
+        //);
+      return Promise.resolve(difference);
+    })
+>>>>>>> working on database server specs dummy user data
     .then(db.saveUrls)
     .then(resolve)
     .catch(reject);

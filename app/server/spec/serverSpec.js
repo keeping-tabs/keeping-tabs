@@ -67,8 +67,12 @@ describe('server', function() {
 
 
   describe('database tests', function () {
+<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
     var usernames = ['louie', 'jake', 'justin', 'ivan'];
     var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
+=======
+    var users = ['louie, jake, ivan, justin'];
+>>>>>>> working on database server specs dummy user data
 
     var urls = [
       'https://www.google.com',
@@ -84,6 +88,7 @@ describe('server', function() {
     ];
 
     var usersUrls = {
+<<<<<<< 742de868dde72890158b0302d1e2ca3c0a91b658
       louie: [0, 1, 6, 8],
       jake: [3, 5, 6, 9],
       justin: [0, 1, 2, 4],
@@ -113,6 +118,20 @@ describe('server', function() {
         });
       };
       postUser(usernames.shift());
+=======
+      0: [0, 1, 3, 4, 6, 8],
+      1: [1, 2, 3, 5, 6, 9],
+      2: [0, 1, 2, 5, 7, 8],
+      3: [0, 2, 5, 7, 8, 9]
+    };
+    var userIndex = 0;
+    it('POST /links', function(done) {
+      request
+      .post('/links')
+      // .send({ urls: ['http://google.com'] })
+      .send({ urls: usersUrls[userIndex].map(function (urlIndex) {return urls[urlIndex];}) })
+      .expect(201, done);
+>>>>>>> working on database server specs dummy user data
     });
   });
 
