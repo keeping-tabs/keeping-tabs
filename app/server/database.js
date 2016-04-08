@@ -310,4 +310,3 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 
 
 module.exports = db;
-
