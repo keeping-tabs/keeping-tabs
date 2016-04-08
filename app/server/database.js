@@ -84,6 +84,58 @@ db.fetchTable = function (table, columns, where) {
   });
 };
 
+db.fetchLinksForUser = function (username) {
+  console.log('username: ', username);
+  return db.joinTable(
+    'users', 
+    'users_links_join', 
+    ' users.username="' + username + '" and users.id = users_links_join.userId',
+    'INNER', 
+    'linkId')
+  .then(function (data) {
+    console.log('data: ', data);
+    return Promise.resolve(
+      data.map(function (element) {return element.linkId})
+      .map(function (id) {return 'id = ' + id;})
+      .join(' or ')
+    );
+  })
+  .then(function (where) {
+    console.log('where: ', where);
+    return db.fetchTable('links', 'title, url', where);
+  });
+};
+
+db.joinTable = function (table1, table2, conditional, joinType, columns) {
+
+
+
+  // table should be a sql string of the table name
+  // columns should be a sql string of the column names
+  // where should be a sql string of the conditional options
+  return new Promise(function (resolve, reject) {
+
+
+   //add edge case logic for inputs. throw error for bad data
+   //use regex
+
+
+
+    db.all(
+      // SELECT ... FROM table1 [INNER] JOIN table2 ON conditional_expression ...
+
+      'SELECT ' + ( columns ? columns : '*' ) + ' FROM ' + table1 + ' ' + ( joinType ? joinType : '' ) + ' JOIN ' + table2 + ' ON ' + ( conditional ? conditional : '1=1' ), 
+      // 'SELECT * FROM users',
+      function(error, data) {
+        if (error) {
+          reject(error);
+        }
+        resolve(data);
+      }
+    );
+  });
+};
+
 
 db.fetchUserId = function (username) {
   return db.fetchTable('users', 'id', 'username="' + username + '"')
@@ -126,7 +178,6 @@ db.fetchAllLinksForUser = function (username) {
       linkIds.forEach(function (linkId, index) {
         db.fetchLinkById(linkId)
         .then(function (data) {
-          console.log('data: ', data);
           links.push(data);
           if (index === linkIds.length - 1) {
             resolve(links);
@@ -220,6 +271,10 @@ db.fetchUrls = function () {
 
 
 
+
+
+
+
 db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(function (log) {console.log(log);return Promise.resolve()})
 .then(db.fetchUsers)
@@ -300,7 +355,23 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(function(message){
   console.log('all links: ', message);
   return Promise.resolve();
+})
+.then(function () {
+  return db.joinTable('users', 'users_links_join', ' users.username="louie" and users.id = users_links_join.userId', 'INNER', 'linkId');
+})
+.then(function(message){
+  console.log('join: ', message);
+  return Promise.resolve();
+})
+.then(function () {
+  return db.fetchLinksForUser('louie')
+})
+.then(function(message){
+  console.log('links: ', message);
+  return Promise.resolve();
 });
+
+
 
 
 
