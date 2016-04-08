@@ -162,17 +162,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    
-    cssmin: {
-      'chrome-popup': {
-        files: {
-          './app/chrome/dist/popup.css': [
-            './node_modules/tachyons/css/tachyons.min.css',
-            './app/chrome/popup/popup.css'
-          ]
-        }
-      }
-    },
 
     copy: {
       prod: {
