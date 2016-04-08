@@ -64,4 +64,40 @@ describe('server', function() {
         .expect(201, done);
     });
   });
+
+
+  describe('database tests', function () {
+    var users = ['louie, jake, ivan, justin'];
+
+    var urls = [
+      'https://www.google.com',
+      'https://www.amazon.com',
+      'https://www.facebook.com',
+      'https://www.paypal.com',
+      'https://www.github.com',
+      'https://www.slack.com',
+      'https://www.wikipedia.com',
+      'https://www.dictionary.com',
+      'https://www.ebay.com',
+      'https://www.cnn.com'
+    ];
+
+    var usersUrls = {
+      0: [0, 1, 3, 4, 6, 8],
+      1: [1, 2, 3, 5, 6, 9],
+      2: [0, 1, 2, 5, 7, 8],
+      3: [0, 2, 5, 7, 8, 9]
+    };
+    var userIndex = 0;
+    it('POST /links', function(done) {
+      request
+      .post('/links')
+      // .send({ urls: ['http://google.com'] })
+      .send({ urls: usersUrls[userIndex].map(function (urlIndex) {return urls[urlIndex];}) })
+      .expect(201, done);
+    });
+  });
+
+
+
 });

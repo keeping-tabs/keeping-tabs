@@ -27,16 +27,25 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 var db = require('./database.js');
-
+var _ = require('underscore');
 
 
 var setUrls = function (urls) {
   return new Promise(function (resolve, reject) {
     // tempSetUrls.complete = resolve;//this is to represent the async on done or colplete or end...
     // tempSetUrls(urls);// this is to represent the function call to the setUrlsInTheDatabase async function call
-    
-    db.saveUrls(urls)
-      .then(resolve)
+    db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
+    .then(function (data) {
+      var existingUrls = data.map(function (element) {return element.url;});
+      console.log('existingUrls: ', existingUrls);
+      // return Promise.resolve(
+        var difference = _.difference(urls, existingUrls);
+        console.log('difference: ', difference);
+        //);
+      return Promise.resolve(difference);
+    })
+    .then(db.saveUrls)
+    .then(resolve)
     .catch(reject);
 
     // reject('issue in tempSetUrls complete method');// currently executing synchronously this line should not fire. 

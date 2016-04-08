@@ -229,6 +229,11 @@ db.fetchUsers = function () {
 
 
 db.saveUrls = function (urls) {
+  if (!Array.isArray(urls)) {
+    throw new Error('expected urls argument to be an array. Instead typeof urls === ' + typeof urls);
+  } else if (urls.length === 0) {
+    return Promise.resolve();
+  }
   return new Promise(function (resolve, reject) {
     var statement = db.prepare('INSERT INTO links VALUES ($id, $title, $url, $created)');
     urls.forEach(function (url, index) {
@@ -379,6 +384,8 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 
 
 module.exports = db;
+
+
 
 
 
