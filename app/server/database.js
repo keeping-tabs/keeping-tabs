@@ -23,7 +23,7 @@ db.insertIntoTableStatement = function (table, keyString) {
   return db.prepare('INSERT INTO ' + table + ' VALUES (' + keyString + ')');
 };
 
-db.insertInto = function (table, data) {
+db.insertInto = function (table, data, includePrimaryKey) {
   // table should be a string 
   // data should be an array of data in the order of table columns
   // example: table = 'users'; data = [userId, linkId];
@@ -34,7 +34,7 @@ db.insertInto = function (table, data) {
   return new Promise(function (resolve, reject) {
 
     var keys = data.map(function (val, index) {return '$' + index;});
-    var keyString = keys.reduce(function (hold, current) {return hold + ', ' + current;});
+    var keyString = ( includePrimaryKey ? '$primary, ' : '') + keys.reduce(function (hold, current) {return hold + ', ' + current;});
     var statement = db.insertIntoTableStatement(table, keyString);
     
     var index = -1;
@@ -78,22 +78,22 @@ db.saveUrlUserJoin = function (userId, linkId) {
 
 
 
-db.fetchUsersforLink = function (linkId) {
-  return new Promise(function (resolve, reject) {
-    var data = [];
-    db.each('SELECT * FROM users_links_join', function(error, join) {
-      if (error) {
-        reject(error);
-      }
-      data.push(join);
-    }, function (error) {
-      if (error) {
-        reject(error);
-      }
-      resolve(data);
-    });
-  });
-};
+// db.fetchUsersforLink = function (linkId) {
+//   return new Promise(function (resolve, reject) {
+//     var data = [];
+//     db.each('SELECT * FROM users_links_join', function(error, join) {
+//       if (error) {
+//         reject(error);
+//       }
+//       data.push(join);
+//     }, function (error) {
+//       if (error) {
+//         reject(error);
+//       }
+//       resolve(data);
+//     });
+//   });
+// };
 
 
 db.fetchTable = function (table, columns, where) {
@@ -177,79 +177,93 @@ db.joinTable = function (table1, table2, conditional, joinType, columns) {
 };
 
 
-db.fetchUserId = function (username) {
-  return db.fetchTable('users', 'id', 'username="' + username + '"')
-  .then(function (data) {
-    if (data.length !== 1) {
-      return Promise.reject('username not found');
-    } else if (typeof data[0].id !== 'number') {
-      return Promise.reject('username not found');
-    }
-    return Promise.resolve(data[0].id);
-  });
-};
+// db.fetchUserId = function (username) {
+//   return db.fetchTable('users', 'id', 'username="' + username + '"')
+//   .then(function (data) {
+//     if (data.length !== 1) {
+//       return Promise.reject('username not found');
+//     } else if (typeof data[0].id !== 'number') {
+//       return Promise.reject('username not found');
+//     }
+//     return Promise.resolve(data[0].id);
+//   });
+// };
 
-db.fetchLinkById = function (linkId) {
-  return db.fetchTable('links', 'title, url', 'id="' + linkId + '"')
-  .then(function (data) {
-    if (data.length === 0) {
-      return Promise.reject('no link #' + linkId + ' was found');
-    }
-    return Promise.resolve(data);
-  });
-};
+// db.fetchLinkById = function (linkId) {
+//   return db.fetchTable('links', 'title, url', 'id="' + linkId + '"')
+//   .then(function (data) {
+//     if (data.length === 0) {
+//       return Promise.reject('no link #' + linkId + ' was found');
+//     }
+//     return Promise.resolve(data);
+//   });
+// };
 
-db.fetchLinkIdsForUserId = function (userId) {
-  return db.fetchTable('users_links_join', 'linkId', 'userId="' + userId + '"')
-  .then(function (data) {
-    if (data.length === 0) {
-      return Promise.reject('no links for userId #' + userId + ' was found');
-    }
-    return Promise.resolve(data.map(function (element) {return element.linkId;}));
-  });
-};
+// db.fetchLinkIdsForUserId = function (userId) {
+//   return db.fetchTable('users_links_join', 'linkId', 'userId="' + userId + '"')
+//   .then(function (data) {
+//     if (data.length === 0) {
+//       return Promise.reject('no links for userId #' + userId + ' was found');
+//     }
+//     return Promise.resolve(data.map(function (element) {return element.linkId;}));
+//   });
+// };
 
-db.fetchAllLinksForUser = function (username) {
-  return db.fetchUserId(username)
-  .then(db.fetchLinkIdsForUserId)
-  .then(function (linkIds) {
-    return new Promise(function (resolve) {
-      var links = [];
-      linkIds.forEach(function (linkId, index) {
-        db.fetchLinkById(linkId)
-        .then(function (data) {
-          links.push(data);
-          if (index === linkIds.length - 1) {
-            resolve(links);
-          }
-        });
-      });
-    });
-  });
-};
+// db.fetchAllLinksForUser = function (username) {
+//   return db.fetchUserId(username)
+//   .then(db.fetchLinkIdsForUserId)
+//   .then(function (linkIds) {
+//     return new Promise(function (resolve) {
+//       var links = [];
+//       linkIds.forEach(function (linkId, index) {
+//         db.fetchLinkById(linkId)
+//         .then(function (data) {
+//           links.push(data);
+//           if (index === linkIds.length - 1) {
+//             resolve(links);
+//           }
+//         });
+//       });
+//     });
+//   });
+// };
 
 db.saveUsers = function (users) {
-  return new Promise(function (resolve, reject) {
-    var statement = db.prepare('INSERT INTO users VALUES ($id, $username, $created)');
-    users.forEach(function (username, index) {
-      statement.run({
-        $username: username,
-        $created: Date.now()
-      }, function (error) {
-        if (error) {
-          reject(error);
-        }
-        if (index === users.length - 1) {
-          resolve(users.length + ' Users are saved');
-        }
-      });
+  return new Promise(function (resolve) {
+    users.forEach(function (user, index) {
+     insertInto('users', [user, Date.now()], true)
+     .then(function () {
+      if (index === users.length - 1) {
+        resolve();
+      }
+     });
     });
   });
+
+
+  // return new Promise(function (resolve, reject) {
+  //   var statement = db.prepare('INSERT INTO users VALUES ($id, $username, $created)');
+  //   users.forEach(function (username, index) {
+  //     statement.run({
+  //       $username: username,
+  //       $created: Date.now()
+  //     }, function (error) {
+  //       if (error) {
+  //         reject(error);
+  //       }
+  //       if (index === users.length - 1) {
+  //         resolve(users.length + ' Users are saved');
+  //       }
+  //     });
+  //   });
+  // });
 };
 
 
 
 db.fetchUsers = function () {
+  return db.fetchTable('users');
+/*
   return new Promise(function (resolve, reject) {
     var data = [];
     db.each('SELECT * FROM users', function(error, user) {
@@ -263,7 +277,7 @@ db.fetchUsers = function () {
       }
       resolve(data);
     });
-  });
+  });*/
 };
 
 
@@ -274,23 +288,36 @@ db.saveUrls = function (urls) {
   } else if (urls.length === 0) {
     return Promise.resolve();
   }
-  return new Promise(function (resolve, reject) {
-    var statement = db.prepare('INSERT INTO links VALUES ($id, $title, $url, $created)');
+
+
+  return new Promise(function (resolve) {
     urls.forEach(function (url, index) {
-      statement.run({
-        $title: 'Title ' + index,
-        $url: url,
-        $created: Date.now()
-      }, function (error) {
-        if (error) {
-          reject(error);
-        }
-        if (index === urls.length - 1) {
-          resolve(urls.length + ' URLs are saved');
-        }
-      });
+     db.insertInto('links', ['Title ' + index, url, Date.now()], true)
+     .then(function () {
+      if (index === urls.length - 1) {
+        resolve();
+      }
+     });
     });
   });
+
+  // return new Promise(function (resolve, reject) {
+  //   var statement = db.prepare('INSERT INTO links VALUES ($id, $title, $url, $created)');
+  //   urls.forEach(function (url, index) {
+  //     statement.run({
+  //       $title: 'Title ' + index,
+  //       $url: url,
+  //       $created: Date.now()
+  //     }, function (error) {
+  //       if (error) {
+  //         reject(error);
+  //       }
+  //       if (index === urls.length - 1) {
+  //         resolve(urls.length + ' URLs are saved');
+  //       }
+  //     });
+  //   });
+  // });
 };
 
 
@@ -298,20 +325,21 @@ db.saveUrls = function (urls) {
 
 // this can be cahnged to just return the urls instead of all the data if that is desired
 db.fetchUrls = function () {
-  return new Promise(function (resolve, reject) {
-    var data = [];
-    db.each('SELECT * FROM links', function(error, link) {
-      if (error) {
-        reject(error);
-      }
-      data.push(link);
-    }, function (error) {
-      if (error) {
-        reject(error);
-      }
-      resolve(data);
-    });
-  });
+  return db.fetchTable('links');
+  // return new Promise(function (resolve, reject) {
+  //   var data = [];
+  //   db.each('SELECT * FROM links', function(error, link) {
+  //     if (error) {
+  //       reject(error);
+  //     }
+  //     data.push(link);
+  //   }, function (error) {
+  //     if (error) {
+  //       reject(error);
+  //     }
+  //     resolve(data);
+  //   });
+  // });
 };
 
 
