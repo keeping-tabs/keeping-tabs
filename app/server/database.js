@@ -95,7 +95,7 @@ db.fetchLinksForUser = function (username) {
   .then(function (data) {
     console.log('data: ', data);
     return Promise.resolve(
-      data.map(function (element) {return element.linkId})
+      data.map(function (element) {return element.linkId;})
       .map(function (id) {return 'id = ' + id;})
       .join(' or ')
     );
@@ -185,7 +185,7 @@ db.fetchAllLinksForUser = function (username) {
         });
       });
     });
-  })
+  });
 };
 
 db.saveUsers = function (users) {
@@ -274,7 +274,7 @@ db.fetchUrls = function () {
 
 
 
-
+/*
 db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(function (log) {console.log(log);return Promise.resolve()})
 .then(db.fetchUsers)
@@ -372,7 +372,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 });
 
 
-
+*/
 
 
 
