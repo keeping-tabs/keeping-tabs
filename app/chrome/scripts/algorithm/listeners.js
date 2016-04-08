@@ -119,7 +119,7 @@ exports.init = function() {
         if (oldTabId) {
           var oldTab = currentTabs[oldTabId];
           delete currentTabs[oldTabId];
-
+          
           queue.delete(String(dataObj.tab.id));
           queue.update(String(oldTab.tab.id), oldTab.data);
           timer.initialize(queue);
