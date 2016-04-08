@@ -92,7 +92,7 @@ describe('server', function() {
 
 
     for (var user in users) {
-      users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];})
+      users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];});
     }
     
 

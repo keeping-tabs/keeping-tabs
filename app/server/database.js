@@ -40,10 +40,10 @@ db.insertInto = function (table, data, includePrimaryKey) {
     var statement = db.insertIntoTableStatement(table, keyString);
     
     var index = -1;
-    statementData = data.reduce(function (hold, current) {
+    var statementData = data.reduce(function (hold, current) {
       index++;
       hold['$' + index] = current;
-      return hold
+      return hold;
     }, {});
 
     statement.run(statementData, function (error) {
@@ -51,7 +51,7 @@ db.insertInto = function (table, data, includePrimaryKey) {
         reject(error);
       }
       resolve('' + data + ' Saved to ' + table + ' table');
-    })
+    });
   });
 
 };
@@ -208,7 +208,7 @@ db.saveLinks = function (links, username) {
           resolve('' + links.length + ' links were saved');
         }
        });
-    })
+    });
     });
   });
 
@@ -246,7 +246,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 
 // save urls
 .then(function () {
-  return db.saveUrls(['a','b','c'])
+  return db.saveUrls(['a','b','c']);
 })
 .then(log)
 
@@ -263,22 +263,22 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
   .then(log)
 
   .then(function (){
-    return db.saveUrlUserJoin(1, 3)
+    return db.saveUrlUserJoin(1, 3);
   })
   .then(log)
 
   .then(function (){
-    return db.saveUrlUserJoin(2, 3)
+    return db.saveUrlUserJoin(2, 3);
   })
   .then(log)
 
   .then(function (){
-    return db.saveUrlUserJoin(2, 2)
+    return db.saveUrlUserJoin(2, 2);
   })
   .then(log)
 
   .then(function (){
-    return db.saveUrlUserJoin(3, 1)
+    return db.saveUrlUserJoin(3, 1);
   })
   .then(log);
 })
@@ -293,7 +293,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 })
 .then(log)
 .then(function () {
-  return db.fetchLinksForUser('louie')
+  return db.fetchLinksForUser('louie');
 })
 .then(log)
 
@@ -303,11 +303,10 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 })
 .then(function () {
   console.log('fetch');
-  return db.fetchLinksForUser('louie')
+  return db.fetchLinksForUser('louie');
 })
 .then(log);
 
-;
 
 
 
