@@ -19,21 +19,61 @@ db.serialize(function() {
 });
 
 
-db.saveUrlUserJoin = function (userId, linkId) {
-  return new Promise (function (resolve, reject) {
-    // var statement = db.prepare('INSERT INTO users_links_join VALUES ($id)');
-    var statement = db.prepare('INSERT INTO users_links_join VALUES ($id, $userId, $linkId)');
-    statement.run(
-      // {},
-      {$userId: userId, $linkId: linkId},
-      function (error) {
-        if (error) {
-          reject(error);
-        }
-        resolve('saved users_links_join: ' + userId + ' : ' + linkId);
+db.insertIntoTableStatement = function (table, keyString) {
+  return db.prepare('INSERT INTO ' + table + ' VALUES (' + keyString + ')');
+};
+
+db.insertInto = function (table, data) {
+  // table should be a string 
+  // data should be an array of data in the order of table columns
+  // example: table = 'users'; data = [userId, linkId];
+  if (typeof table !== 'string' || !Array.isArray(data)) {
+    throw new Error('expected argument types string and array instead received ' + typeof table + ' and ' + typeof data);
+  }
+
+  return new Promise(function (resolve, reject) {
+
+    var keys = data.map(function (val, index) {return '$' + index;});
+    var keyString = keys.reduce(function (hold, current) {return hold + ', ' + current;});
+    var statement = db.insertIntoTableStatement(table, keyString);
+    
+    var index = -1;
+    data = data.reduce(function (hold, current) {
+      index++;
+      hold['$' + index] = current;
+      return hold
+    }, {});
+
+    statement.run(data, function (error) {
+      if (error) {
+        reject(error);
       }
-    );
+      resolve('' + data + ' Saved to ' + table + ' table');
+    })
   });
+
+};
+
+
+db.saveUrlUserJoin = function (userId, linkId) {
+ return insertInto('users_links_join', [userId, linkId]);
+
+  // return new Promise (function (resolve, reject) {
+  //   // var statement = db.prepare('INSERT INTO users_links_join VALUES ($id)');
+  //   // var statement = db.prepare('INSERT INTO users_links_join VALUES ($id, $userId, $linkId)');
+  //   var statement = db.insertIntoTableStatement('users_links_join', '$a, $b, $c')//'$id, $userId, $linkId') //db.prepare('INSERT INTO users_links_join VALUES ($id, $userId, $linkId)');
+  //   statement.run(
+  //     {$b: userId, $c: linkId},
+  //     // {},
+  //     // {$userId: userId, $linkId: linkId},
+  //     function (error) {
+  //       if (error) {
+  //         reject(error);
+  //       }
+  //       resolve('saved users_links_join: ' + userId + ' : ' + linkId);
+  //     }
+  //   );
+  // });
 };
 
 
@@ -279,7 +319,7 @@ db.fetchUrls = function () {
 
 
 
-/*
+
 db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 .then(function (log) {console.log(log);return Promise.resolve()})
 .then(db.fetchUsers)
@@ -377,7 +417,7 @@ db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
 });
 
 
-*/
+
 
 
 
