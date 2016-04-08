@@ -44,6 +44,7 @@
     "grunt-contrib-jade": "^1.0.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-ejs": "^0.3.0",
     "grunt-mocha": "^1.0.0",
     "grunt-mocha-test": "^0.12.7",
     "grunt-nodemon": "^0.4.1",

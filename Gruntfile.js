@@ -123,28 +123,32 @@ module.exports = function(grunt) {
       }
     },
 
-    jade: {
+    ejs: {
       prod: {
         options: {
-          data: {
-            url: 'https://keeping-tabs.herokuapp.com'
-          }
+          url: 'https://keeping-tabs.herokuapp.com'
         },
-        files: {
-          './chrome_ext/prod/background.html': './app/chrome/src/background.jade',
-          './chrome_ext/prod/popup.html': './app/chrome/src/popup.jade'
-        }
+        src: [
+          './app/chrome/src/background.ejs',
+          './app/chrome/src/popup.ejs'
+        ],
+        expand: true,
+        flatten: true,
+        dest: './chrome_ext/prod/',
+        ext: '.html'
       },
       dev: {
         options: {
-          data: {
-            url: 'http://localhost:8080'
-          }
+          url: 'http://localhost:8080'
         },
-        files: {
-          './chrome_ext/dev/background.html': './app/chrome/src/background.jade',
-          './chrome_ext/dev/popup.html': './app/chrome/src/popup.jade'
-        }
+        src: [
+          './app/chrome/src/background.ejs',
+          './app/chrome/src/popup.ejs'
+        ],
+        expand: true,
+        flatten: true,
+        dest: './chrome_ext/dev/',
+        ext: '.html'
       }
     },
     
@@ -208,7 +212,7 @@ module.exports = function(grunt) {
     'browserify:chrome-popup',
     'concat:chrome-vendors',
     'cssmin:chrome-popup',
-    'jade',
+    'ejs',
     'copy',
     'build-manifest'
   ]);
