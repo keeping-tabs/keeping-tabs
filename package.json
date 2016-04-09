@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/keeping-tabs/keeping-tabs#readme",
   "dependencies": {
+    "angular": "^1.5.3",
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",
@@ -53,9 +54,9 @@
     "load-grunt-tasks": "^3.4.1",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.1",
+    "sqlite3": "^3.1.2",
     "supertest": "^1.2.0",
     "tachyons": "^4.0.0-beta.19",
-    "underscore": "^1.8.3",
-    "sqlite3": "^3.1.2"
+    "underscore": "^1.8.3"
   }
 }

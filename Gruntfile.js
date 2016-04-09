@@ -76,7 +76,7 @@ module.exports = function(grunt) {
       client: {
         files: {
           src: [
-            './app/client/**/*.js',
+            './app/client/src/**/*.js',
             '!./app/client/spec/*.js'
           ]
         }
@@ -120,6 +120,12 @@ module.exports = function(grunt) {
           './node_modules/jquery/dist/jquery.min.js'
         ],
         dest: './app/chrome/dist/vendors.js'
+      },
+      'client': {
+        src: [
+          './node_modules/angular/angular.min.js'
+        ],
+        dest: './app/client/dist/vendors.js'
       }
     },
 
@@ -175,6 +181,12 @@ module.exports = function(grunt) {
         flatten: true,
         src: './app/chrome/src/keeping-tabsicon.png',
         dest: './chrome_ext/prod/'
+      },
+      client: {
+        expand: true,
+        cwd: './app/client/src/',
+        src: ['**/*.html'],
+        dest: './app/client/dist/'
       }
     }
   });
