@@ -2,11 +2,20 @@
 /* globals chrome: false */
 var Chrome = require('./ChromeHelpers.js');
 
+// var localStorage = localStorage ? localStorage : {keepingTabs: {}};
+
+// var localData = localStorage ? JSON.parse(localStorage.keepingTabs) : {};
+
 var Timer = {
   isActive: false,
   timeout: setTimeout(function() {}, 0),
+  // timeLimit: localData.time ? localData.time : 1000 * 60 * 60, //default 60 mins timelimit
   timeLimit: 1000 * 60 * 60, //default 60 mins timelimit
   initialize: function (queue, time) {
+    console.log('initialize timer');
+    console.log('time limit: ', this.timeLimit);
+    console.log('queue: ', queue);
+
     clearTimeout(this.timeout);
     this.isActive = true;
   

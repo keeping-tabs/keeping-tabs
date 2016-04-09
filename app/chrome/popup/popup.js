@@ -4,12 +4,12 @@
   console.log('I am popup');
 
 
-  var localData = JSON.parse(localStorage.keepingTabs);
+  // var localData = JSON.parse(localStorage.keepingTabs);
 
   var _settings = {
-    time: localData.time ? localData.time : 1000 * 60 * 60, // one hour
-    active: localData.active ? localData.active : false,
-    username: localData.username ? localData.username : false
+    time: 0,
+    active: true,
+    username: false
   };
 
   
@@ -95,12 +95,12 @@
   });
 
 
-  (function initializeSettings () {
-    $btnSave.trigger('click');
-    // $btnActivate.trigger('click');
-    port.postMessage({active: _settings.active});
-    $username.find('label').text('Hello ' + _settings.username);
-  }) ();
+  // (function initializeSettings () {
+  //   $btnSave.trigger('click');
+  //   // $btnActivate.trigger('click');
+  //   port.postMessage({active: _settings.active});
+  //   $username.find('label').text('Hello ' + _settings.username);
+  // }) ();
 
   function render() {
 

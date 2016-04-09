@@ -95,17 +95,18 @@ console.log('set local storage: ', object);
 
     updateCurrentTabs : function (queue, currentTabs) {
       return new Promise(function (resolve, reject) {
-        var deleteTabIfItDoesnotExist = function (bool) {
-          if (!bool) {
-            delete currentTabs[tabId];
-            queue.delete(tabId);
-          }
-        };
+        // var deleteTabIfItDoesnotExist = function (bool) {
+        //   if (!bool) {
+        //     delete currentTabs[tabId];
+        //     queue.delete(tabId);
+        //   }
+        // };
 
         try {
           Chrome.getAllTabs()
           .then(Chrome.mapToTabIds)
           .then(function (tabIds) {
+            console.log('all tabs: ',tabIds);
             for (var tabId in currentTabs) {
               Chrome.containsId(tabIds, Number(tabId))
               // .then(deleteTabIfItDoesnotExist);
