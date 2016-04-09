@@ -171,6 +171,14 @@ module.exports = function(grunt) {
             './app/chrome/popup/popup.css'
           ]
         }
+      },
+      client: {
+        files: {
+          './app/client/dist/style.css': [
+            './node_modules/bootstrap/dist/css/bootstrap.min.css',
+            './app/client/src/**/*.css'
+          ]
+        }
       }
     },
 
@@ -237,6 +245,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build-client', [
     'browserify:client',
     'concat:client',
+    'cssmin:client',
     'copy:client'
   ]);
 
