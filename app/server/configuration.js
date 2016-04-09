@@ -46,11 +46,11 @@ app.set('view engine', 'jade');
 
 // app.get('/', handler.index);
 
-app.get('/api/links', handler.linksGet);
-app.post('/api/links', handler.linksPost);
+app.get('/api/links', auth.authenticate, handler.linksGet);
+app.post('/api/links', auth.authenticate, handler.linksPost);
 
 //jade rendering
-app.get('/urls', handler.urls);
+// app.get('/urls', handler.urls);
 
 // set chrome ext env
 app.get('/api/env', function(req, res) {

@@ -14,7 +14,7 @@ var Auth = function() {
     db.fetchUserId(username).then(function(users) {
       // do check password
       if(users.length > 0) {
-        res.status(200).send({token: 'faketoken'});
+        res.status(200).send({token: username + 'faketoken'});
       } else {
         console.warn('User '+ username + ' doesn\'t exist');
         res.status(401).send('User '+ username + ' doesn\'t exist');
@@ -41,7 +41,7 @@ var Auth = function() {
         db.saveUsers([username]).then(function() {
           console.log('User '+ username + ' created');
           
-          res.status(201).send({token: 'faketoken'});
+          res.status(201).send({token: username+'faketoken'});
 
         });
       }
@@ -53,7 +53,7 @@ var Auth = function() {
 
   // middleware
   function auth(req, res, next) {
-
+    next();
   }
 };
 
