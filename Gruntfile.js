@@ -176,6 +176,7 @@ module.exports = function(grunt) {
         files: {
           './app/client/dist/style.css': [
             './node_modules/bootstrap/dist/css/bootstrap.min.css',
+            './node_modules/tachyons/css/tachyons.min.css',
             './app/client/src/**/*.css'
           ]
         }

@@ -1,7 +1,14 @@
 var angular = require('angular');
 require('angular-ui-router');
 
-var app = angular.module('keepingTabs', ['ui.router', 'keepingTabs.auth']);
+require('./auth');
+require('./links');
+
+var app = angular.module('keepingTabs', [
+  'ui.router',
+  'keepingTabs.auth',
+  'keepingTabs.links'
+]);
 
 app.config(function($urlRouterProvider, $stateProvider) {
   
@@ -9,8 +16,5 @@ app.config(function($urlRouterProvider, $stateProvider) {
   console.log('main');
 
 });
-
-require('./auth');
-
 
 angular.bootstrap(document, ['keepingTabs']);
