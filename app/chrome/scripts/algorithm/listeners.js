@@ -31,6 +31,7 @@ exports.init = function() {
         if(msg.time !== undefined) {
           timer.timeLimit = msg.time;
           console.log('time limit updated: ', timer.timeLimit);
+          Chrome.setLocalStorage({time: msg.time});
           port.postMessage({time: timer.timeLimit}); // respond with new time
         }
         
@@ -38,14 +39,24 @@ exports.init = function() {
           if(!msg.active) {
             removeAllListeners();
             timer.deactivate();
+            console.log('set chrome to inactive');
+            Chrome.setLocalStorage({active: false});
             port.postMessage({active: false});
           } else {
             addAllListeners();
             timer.initialize(queue);
+            Chrome.setLocalStorage({active: true});
             port.postMessage({active: true});
           }
           console.log('extension active: ', msg.active);
         }
+        if(msg.username !== undefined) {
+          console.log('set username: ', msg.username);
+          // _settings.username = msg.username;
+          Chrome.setLocalStorage({username: msg.username});
+          port.postMessage(msg);
+        }
+
       });
     }
   });

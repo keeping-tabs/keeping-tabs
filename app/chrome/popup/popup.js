@@ -9,11 +9,11 @@
   var _settings = {
     time: localData.time ? localData.time : 1000 * 60 * 60, // one hour
     active: localData.active ? localData.active : false,
-    username: localData.username ? localData.username : 'not signed in'
+    username: localData.username ? localData.username : false
   };
 
   
-  var Chrome = require('../scripts/algorithm/ChromeHelpers.js');
+  // var Chrome = require('../scripts/algorithm/ChromeHelpers.js');
 
   var port = chrome.runtime.connect({name: 'popup_setting'});
 
@@ -30,6 +30,7 @@
   var $username = $('.js-username');
   var $inputUsername = $('.js-input-username');
 
+  var $links = $('.js-links');
 
   $custom.hide();
 
@@ -43,7 +44,10 @@
     if(msg.active !== undefined) {
       console.log('set active: ', msg.active);
       _settings.active = msg.active;
-      Chrome.setLocalStorage({active: _settings.active});
+    }
+    if(msg.username !== undefined) {
+      console.log('set username: ', msg.username);
+      _settings.username = msg.username;
     }
 
     render();
@@ -66,7 +70,7 @@
   });
 
   $btnSave.on('click', function() {
-    Chrome.setLocalStorage({time: _settings.time});
+    // Chrome.setLocalStorage({time: _settings.time});
     port.postMessage({time: _settings.time});
   });
 
@@ -79,9 +83,15 @@
   });
 
   $inputUsername.on('blur', function () {
-    var username = $inputUsername.val();
-    $username.find('label').text('Hello ' + username);
-    Chrome.setLocalStorage({username: username});
+    username = $inputUsername.val();
+
+    console.log('username blur: ' + username);
+
+    port.postMessage({username: username});
+
+    // $username.find('label').text(_settings.username ? 'Hello ' + _settings.username : '');
+    // $links.find('a').attr('href', _settings.username ? 'localhost:8080/urls?username=' + _settings.username : ''/*route to signup*/)
+    // Chrome.setLocalStorage({username: _settings.username});
   });
 
 
@@ -115,7 +125,8 @@
       chrome.browserAction.setBadgeText({text: 'off'});
       chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     }
-    // Chrome.setLocalStorage('active', !_settings.active);
-
+    
+    $username.find('label').text(_settings.username ? 'Hello ' + _settings.username : '');
+    $links.find('a').attr('href', _settings.username ? 'localhost:8080/urls?username=' + _settings.username : ''/*route to signup*/)
   }
 })();
