@@ -6,6 +6,24 @@
 
 var Chrome = (function () {
   return Object.create({
+    setLocalStorage : function (propertyOrObject, value) {
+      // this function can be used to set individual properties on the local storage object
+      // or to overwrite the entire keepingtabs local storage 
+      // example: 
+      //  to set a property use: setLocalStorage('username', 'louie');
+      //  to overwrite the storage use: setLocalStorage({username: 'louie', timelimit: 5000});
+      
+      if (typeof propertyOrObject === 'object') {
+       localStorage.keepingTabs = JSON.stringify(propertyOrObject);
+      } else {
+        var storage = {};
+        if (localStorage.keepingTabs) {
+          storage = JSON.parse(localStorage.keepingTabs);
+        }
+        storage[propertyOrObject] = value;
+        localStorage.keepingTabs = JSON.stringify(storage);
+      }
+    },
     postTabs : function (urls, username) {
       // sending object
       return new Promise(function(resolve,reject){

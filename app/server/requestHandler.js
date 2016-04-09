@@ -31,23 +31,23 @@ var _ = require('underscore');
 var urlModule = require('url');
 
 
-var filterNewUrlsOnly = function (urls) {
-  return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
-    .then(function (data) {
-      var existingUrls = data.map(function (element) {return element.url;});
-      var difference = _.difference(urls, existingUrls);
-      return Promise.resolve(difference);
-    });
-};
+// var filterNewUrlsOnly = function (urls) {
+//   return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
+//     .then(function (data) {
+//       var existingUrls = data.map(function (element) {return element.url;});
+//       var difference = _.difference(urls, existingUrls);
+//       return Promise.resolve(difference);
+//     });
+// };
 
-var setUrls = function (urls) {
-  return new Promise(function (resolve, reject) {
-    filterNewUrlsOnly(urls)
-    .then(db.saveUrls)
-    .then(resolve)
-    .catch(reject);
-  });
-};
+// var setUrls = function (urls) {
+//   return new Promise(function (resolve, reject) {
+//     filterNewUrlsOnly(urls)
+//     .then(db.saveUrls)
+//     .then(resolve)
+//     .catch(reject);
+//   });
+// };
 
 var setLinks = function (links, username) {
   return db.saveLinks(links, username);

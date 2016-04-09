@@ -1,3 +1,4 @@
+  
 (function () {
   /* globals chrome: false */
   console.log('I am popup');
@@ -6,6 +7,9 @@
     time: 0,
     active: false
   };
+  
+  var Chrome = require('../scripts/algorithm/ChromeHelpers.js');
+  Chrome.setLocalStorage('username', 'louie');
 
   var port = chrome.runtime.connect({name: 'popup_setting'});
 
