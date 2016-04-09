@@ -46,6 +46,8 @@ auth.factory('Auth', function($http) {
   }
 });
 
+auth.directive('googleSignIn', require('./googleSignInDirective.js'));
+
 auth.controller('signupCtrl', require('./signupCtrl.js'));
 auth.controller('loginCtrl', require('./loginCtrl.js'));
 
