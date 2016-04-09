@@ -6,13 +6,17 @@
 
 var Chrome = (function () {
   return Object.create({
-    postTabs : function (urls) {
+    postTabs : function (urls, username) {
       // sending object
       return new Promise(function(resolve,reject){
+        console.log('post to for user: ', username);
         $.ajax({
           type: 'POST',
           url: ENV.url + '/links',
-          data: {urls: urls},
+          data: {
+            urls: urls,
+            username: username
+          },
           success: resolve
         })
         .fail(reject);

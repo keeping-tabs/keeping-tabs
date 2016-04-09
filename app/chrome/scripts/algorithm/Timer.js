@@ -62,7 +62,7 @@ var Timer = {
                 // console.log('tab is active: ' + bool);
                 if (!bool) {
                   chrome.tabs.remove(Number(tab.key));
-                  Chrome.postTabs([tab.data.url]);
+                  Chrome.postTabs([tab.data.url], 'louie'/*, somefunctionto get the username from the session or somethin*/);
                 }
               });
             }
