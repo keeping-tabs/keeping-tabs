@@ -77,66 +77,90 @@ exports.init = function() {
 
   function handleOnCreated(tab){
     console.log('created: ', tab.id);
-    Chrome.setData(tab)
-    .then(function (dataObj) {
+    currentTabs[tab.id] = true;
+    console.log('current tabs: ', currentTabs);
+    // Chrome.setData(tab)
+    // .then(function (dataObj) {
       // var oldTab = currentTab;
       Chrome.updateCurrentTabs(queue, currentTabs)
       .then(Chrome.getActiveTabs)
       .then(Chrome.mapToTabIds)
       .then(function (tabIds) {
-        Chrome.findOldTabId(tabIds, currentTabs);
+        return Chrome.findOldTabId(tabIds, currentTabs);
       })
       .then(function (oldTabId) {
-        // console.log('created: ', dataObj.tab.id);
-        currentTabs[dataObj.tab.id] = dataObj;
         if (oldTabId) {
-          var oldTab = currentTabs[oldTabId];
-          delete currentTabs[oldTabId];
+          // console.log(oldTabId);
+          return Chrome.getTab(Number(oldTabId))
+          .then(Chrome.setData)
+          .then(function (dataObj) {
+            // console.log('created: ', dataObj.tab.id);
+            currentTabs[oldTabId] = dataObj;
+              var oldTab = currentTabs[oldTabId];
+              delete currentTabs[oldTabId];
 
-          queue.enqueue(String(oldTab.tab.id), oldTab.data);
-          timer.initialize(queue);
+              queue.enqueue(String(oldTab.tab.id), oldTab.data);
+              timer.initialize(queue);
+          });
         }
       });
-    });
+    // });
   }
 
   function handleOnUpdated(tabId){
-    Chrome.getTab(tabId)
-    .then(Chrome.setData)
-    .then(function (dataObj) {
-      console.log('updated the tab: ', dataObj.tab.id);
-      console.log('updated: ', dataObj.tab.id);
-      currentTabs[dataObj.tab.id] = dataObj;
-    });
+    // Chrome.getTab(tabId)
+    // .then(Chrome.setData)
+    // .then(function (dataObj) {
+    //   console.log('updated the tab: ', dataObj.tab.id);
+    //   console.log('updated: ', dataObj.tab.id);
+    //   currentTabs[dataObj.tab.id] = dataObj;
+    // });
   }
 
   function handleOnActivated(activeInfo){
     // find tab in queue using tabId (given in activeInfo),
     var tabId = activeInfo.tabId;
 
-    Chrome.getTab(tabId)
-    .then(Chrome.setData)
-    .then(function (dataObj) {
-      console.log('activated', dataObj.tab.id);
+    // Chrome.getTab(tabId)
+    // .then(Chrome.setData)
+    // .then(function (dataObj) {
+      // console.log('activated', dataObj.tab.id);
+      currentTabs[tabId] = true;
 
       Chrome.updateCurrentTabs(queue)
       .then(Chrome.getActiveTabs)
       .then(Chrome.mapToTabIds)
       .then(function (tabIds) {return Chrome.findOldTabId(tabIds, currentTabs);})
       .then(function (oldTabId) {
-        console.log('oldTabId: ', oldTabId);
-        console.log('activated: ', dataObj.tab.id);
-        currentTabs[dataObj.tab.id] = dataObj;
+        // console.log('oldTabId: ', oldTabId);
+        // console.log('activated: ', dataObj.tab.id);
         if (oldTabId) {
-          var oldTab = currentTabs[oldTabId];
-          delete currentTabs[oldTabId];
+          // console.log(oldTabId);
+          return Chrome.getTab(Number(oldTabId))
+          .then(Chrome.setData)
+          .then(function (dataObj) {
+            // console.log('created: ', dataObj.tab.id);
+            currentTabs[oldTabId] = dataObj;
+              var oldTab = currentTabs[oldTabId];
+              delete currentTabs[oldTabId];
+              queue.delete(String(dataObj.tab.id));
 
-          queue.delete(String(dataObj.tab.id));
-          queue.update(String(oldTab.tab.id), oldTab.data);
-          timer.initialize(queue);
+              queue.enqueue(String(oldTab.tab.id), oldTab.data);
+              timer.initialize(queue);
+          });
         }
+
+        
+        // currentTabs[dataObj.tab.id] = dataObj;
+        // if (oldTabId) {
+        //   var oldTab = currentTabs[oldTabId];
+        //   delete currentTabs[oldTabId];
+
+        //   queue.update(String(oldTab.tab.id), oldTab.data);
+        //   timer.initialize(queue);
+        // }
       });
-    });
+    // });
   }
 
   function handleOnRemoved(tabId){
