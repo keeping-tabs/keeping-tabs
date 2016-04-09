@@ -13,7 +13,12 @@ var Auth = function() {
 
     db.fetchUserId(username).then(function(users) {
       // do check password
-      res.sendStatus(200);
+      if(users.length > 0) {
+        res.status(200).send({token: 'faketoken'});
+      } else {
+        console.warn('User '+ username + ' doesn\'t exist');
+        res.status(401).send('User '+ username + ' doesn\'t exist');
+      }
     }).catch(function(reason) {
       res.sendStatus(500);
       console.log('Login failed: ', reason);
@@ -52,4 +57,4 @@ var Auth = function() {
   }
 };
 
-module.exports = Auth();
+module.exports = Auth(); /* jshint ignore:line */
