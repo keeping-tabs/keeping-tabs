@@ -32,6 +32,7 @@
   "homepage": "https://github.com/keeping-tabs/keeping-tabs#readme",
   "dependencies": {
     "angular": "^1.5.3",
+    "angular-ui-router": "^0.2.18",
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "chai-as-promised": "^5.3.0",

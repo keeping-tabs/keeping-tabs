@@ -28,13 +28,13 @@ var Auth = function() {
     db.fetchUserId(username).then(function(users) {
       
       if(users.length > 0) { // check if user exist
-        console.warn('User '+ username + 'already exist');
+        console.warn('User '+ username + ' already exist');
         
         res.sendStatus(422);
 
       } else {
         db.saveUsers([username]).then(function() {
-          console.log('User '+ username + 'created');
+          console.log('User '+ username + ' created');
           
           res.status(201).send({token: 'faketoken'});
 
