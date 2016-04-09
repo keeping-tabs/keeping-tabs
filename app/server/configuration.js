@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 // use express static to set the statically hosted files to the serve from the client directory
-app.use('/', express.static(__dirname + '/../client'));
+app.use('/', express.static(__dirname + '/../client/dist/'));
 
 // handle chrome extension script
 app.use('/chrome', allowCrossDomain, express.static(__dirname+ '/../chrome'));
@@ -58,12 +58,8 @@ app.get('/api/env', function(req, res) {
   res.send('var ENV = {url: \'' + envUrl + '\'};');
 });
 
-
-app.get('/signup', function(req, res) {
-
-});
-
-app.post('/signup', auth.signup);
+app.post('/api/signup', auth.signup);
+app.post('/api/login', auth.login);
 
 /////*****/////*****/////*****/////*****
 // set request paths above
