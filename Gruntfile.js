@@ -99,7 +99,7 @@ module.exports = function(grunt) {
       },
       client: {
         files: ['./app/client/**/*.js'],
-        tasks: ['jshint:client']
+        tasks: ['jshint:client', 'build-client']
       }
     },
 
@@ -111,6 +111,10 @@ module.exports = function(grunt) {
       'chrome-popup': {
         src: ['./app/chrome/popup/**/*.js'],
         dest: './app/chrome/dist/popup.js'
+      },
+      client: {
+        src: ['./app/client/src/**/*.js'],
+        dest: './app/client/dist/app.js'
       }
     },
 
@@ -229,8 +233,15 @@ module.exports = function(grunt) {
     'build-manifest'
   ]);
 
+  grunt.registerTask('build-client', [
+    'browserify:client',
+    'concat:client',
+    'copy:client'
+  ]);
+
   grunt.registerTask('build', [
-    'build-chrome'
+    'build-chrome',
+    'build-client'
   ]);
   
   grunt.registerTask('default', [
