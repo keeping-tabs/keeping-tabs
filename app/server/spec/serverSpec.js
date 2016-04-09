@@ -7,13 +7,13 @@ var request = supertest.agent(server);
 /*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit */
 
 describe('server', function() {
-  describe('GET /', function() {
-    it('Should return html of homepage', function(done) {
+  describe('Homepage', function() {
+    it('GET / Should return html of homepage', function(done) {
       request
         .get('/')
         .expect(200)
         .expect('Content-Type', /html/)
-        .expect(/Keeping Tabs: Chrome Extension/)
+        .expect(/Keeping Tabs/)
         .end(function(err, res) {
           if (err) return done(err);
           done();
@@ -57,6 +57,22 @@ describe('server', function() {
   });
 
   describe('API', function() {
+    describe('Signup and Login', function() {
+      it('POST /api/signup', function(done) {
+        request
+          .post('/api/signup')
+          .send({ username: 'cat', password: 'abcd1234' })
+          .expect(201, done);
+      });
+
+      it('POST /api/login', function(done) {
+        request
+          .post('/api/login')
+          .send({ username: 'cat', password: 'abcd1234' })
+          .expect(200, done);
+      });
+    });
+
     it('POST /api/links', function(done) {
       request
         .post('/api/links')
@@ -65,57 +81,69 @@ describe('server', function() {
     });
   });
 
+  describe('Auth Module', function() {
+    var auth = require('../authHandler.js');
 
-  describe('database tests', function () {
-    var usernames = ['louie', 'jake', 'justin', 'ivan'];
-    var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
+    it('has a `signup` method', function() {
+      expect(auth.signup).to.be.a('function');
+    });
 
-    var urls = [
-      'https://www.google.com',
-      'https://www.amazon.com',
-      'https://www.facebook.com',
-      'https://www.paypal.com',
-      'https://www.github.com',
-      'https://www.slack.com',
-      'https://www.wikipedia.com',
-      'https://www.dictionary.com',
-      'https://www.ebay.com',
-      'https://www.cnn.com'
-    ];
+    it('has a `login` method', function() {
+      expect(auth.login).to.be.a('function');
+    });
 
-    var usersUrls = {
-      louie: [0, 1, 6, 8],
-      jake: [3, 5, 6, 9],
-      justin: [0, 1, 2, 4],
-      ivan: [2, 5, 7, 9]
-    };
-
-
-    for (var user in users) {
-      users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];});
-    }
-    
-
-
-    var userIndex = 0;
-    it('initialize the user data', function(done) {
-      // recursively post the testing user data
-      var postUser = function (user) {
-        request
-        .post('/links')
-        .send(users[user])
-        .expect(201, function () {
-          if (usernames.length > 0) {
-            postUser(usernames.shift());
-          } else {
-            done();
-          }
-        });
-      };
-      postUser(usernames.shift());
+    it('has a `authenticate` method', function() {
+      expect(auth.authenticate).to.be.a('function');
     });
   });
+});
+
+describe('database tests', function () {
+  var usernames = ['louie', 'jake', 'justin', 'ivan'];
+  var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
+
+  var urls = [
+    'https://www.google.com',
+    'https://www.amazon.com',
+    'https://www.facebook.com',
+    'https://www.paypal.com',
+    'https://www.github.com',
+    'https://www.slack.com',
+    'https://www.wikipedia.com',
+    'https://www.dictionary.com',
+    'https://www.ebay.com',
+    'https://www.cnn.com'
+  ];
+
+  var usersUrls = {
+    louie: [0, 1, 6, 8],
+    jake: [3, 5, 6, 9],
+    justin: [0, 1, 2, 4],
+    ivan: [2, 5, 7, 9]
+  };
 
 
+  for (var user in users) {
+    users[user].urls = usersUrls[user].map(function (urlIndex) {return urls[urlIndex];});
+  }
+  
 
+
+  var userIndex = 0;
+  it('initialize the user data', function(done) {
+    // recursively post the testing user data
+    var postUser = function (user) {
+      request
+      .post('/links')
+      .send(users[user])
+      .expect(201, function () {
+        if (usernames.length > 0) {
+          postUser(usernames.shift());
+        } else {
+          done();
+        }
+      });
+    };
+    postUser(usernames.shift());
+  });
 });
