@@ -3,13 +3,17 @@
   /* globals chrome: false */
   console.log('I am popup');
 
+
+  var localData = JSON.parse(localStorage.keepingTabs);
+
   var _settings = {
-    time: 0,
-    active: false
+    time: localData.time ? localData.time : 1000 * 60 * 60, // one hour
+    active: localData.active ? localData.active : false,
+    username: localData.username ? localData.username : 'not signed in'
   };
+
   
   var Chrome = require('../scripts/algorithm/ChromeHelpers.js');
-  Chrome.setLocalStorage('username', 'louie');
 
   var port = chrome.runtime.connect({name: 'popup_setting'});
 
@@ -22,7 +26,11 @@
   var $btnShowCustom = $('.js-show-custom');
   var $custom = $('.js-custom');
   var $inputTime = $('.js-input-time');
-  
+
+  var $username = $('.js-username');
+  var $inputUsername = $('.js-input-username');
+
+
   $custom.hide();
 
   // listen to background
@@ -35,6 +43,7 @@
     if(msg.active !== undefined) {
       console.log('set active: ', msg.active);
       _settings.active = msg.active;
+      Chrome.setLocalStorage({active: _settings.active});
     }
 
     render();
@@ -53,9 +62,11 @@
     }
     _settings.time = time;
     render();
+
   });
 
   $btnSave.on('click', function() {
+    Chrome.setLocalStorage({time: _settings.time});
     port.postMessage({time: _settings.time});
   });
 
@@ -66,6 +77,20 @@
   $btnShowCustom.on('click', function() {
     $custom.toggle();
   });
+
+  $inputUsername.on('blur', function () {
+    var username = $inputUsername.val();
+    $username.find('label').text('Hello ' + username);
+    Chrome.setLocalStorage({username: username});
+  });
+
+
+  (function initializeSettings () {
+    $btnSave.trigger('click');
+    // $btnActivate.trigger('click');
+    port.postMessage({active: _settings.active});
+    $username.find('label').text('Hello ' + _settings.username);
+  }) ();
 
   function render() {
 
@@ -90,6 +115,7 @@
       chrome.browserAction.setBadgeText({text: 'off'});
       chrome.browserAction.setBadgeBackgroundColor({color: '#FF0000'});
     }
+    // Chrome.setLocalStorage('active', !_settings.active);
 
   }
 })();
