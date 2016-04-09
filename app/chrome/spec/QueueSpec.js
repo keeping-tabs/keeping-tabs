@@ -1,3 +1,5 @@
+/* globals chai: false, Queue:false, LinkedList:false */
+
 
 var assert = chai.assert;
 chai.should();
@@ -58,7 +60,7 @@ describe('Queue tests:', function () {
   	queue.enqueue(key1, data1);
   	queue.enqueue(key2, data2);
   	queue.enqueue(key3, data3);
-    data4 = {key2: false};
+    var data4 = {key2: false};
   	queue.update(key2, data4);
 
   	queue.dequeue().data.should.equal(data1);
@@ -67,12 +69,12 @@ describe('Queue tests:', function () {
 	});
 	it('enqueue should throw an error on missing key or data', function () {
     var queue = new Queue();
-    expect(function () {queue.enqueue()}).to.throw(Error);
+    expect(function () {queue.enqueue();}).to.throw(Error);
 	});
 	it('enqueue should throw an error on incorrect key type', function () {
     var queue = new Queue();
     expect(function () {
-    	queue.enqueue(['not a string'], ['someData'])
+    	queue.enqueue(['not a string'], ['someData']);
     }).to.throw(Error);
 	});
 	it('delete should throw an error on incorrect key type', function () {

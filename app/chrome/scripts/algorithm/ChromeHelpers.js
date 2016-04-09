@@ -9,7 +9,7 @@ var Chrome = (function () {
     setLocalStorage : function (object) {
       // object should be key value pairs to add to local storage. 
 
-console.log('set local storage: ', object);
+// console.log('set local storage: ', object);
 
       var storage = JSON.parse(localStorage.keepingTabs);
       for (var key in object) {
@@ -37,7 +37,7 @@ console.log('set local storage: ', object);
     postTabs : function (urls, username) {
       // sending object
       return new Promise(function(resolve,reject){
-        console.log('post to for user: ', username);
+        // console.log('post to for user: ', username);
         $.ajax({
           type: 'POST',
           url: ENV.url + '/links',
@@ -106,7 +106,7 @@ console.log('set local storage: ', object);
           Chrome.getAllTabs()
           .then(Chrome.mapToTabIds)
           .then(function (tabIds) {
-            console.log('all tabs: ',tabIds);
+            // console.log('all tabs: ',tabIds);
             for (var tabId in currentTabs) {
               Chrome.containsId(tabIds, Number(tabId))
               // .then(deleteTabIfItDoesnotExist);
@@ -126,7 +126,7 @@ console.log('set local storage: ', object);
     },
 
     findOldTabId : function (tabIds, currentTabs) {
-      console.log(tabIds, currentTabs);
+      // console.log(tabIds, currentTabs);
       var oldTabId = [];
       try {
         oldTabId = Object.keys(currentTabs).filter(function (tabId) {

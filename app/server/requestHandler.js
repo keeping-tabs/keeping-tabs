@@ -98,7 +98,7 @@ var setLinks = function (links, username) {
 
 exports.linksPost = function (request, response) {
   var urls = request.body.urls;
-  console.log('url: ', urls);
+  // console.log('url: ', urls);
   var username = request.body.username;
   // if (!username) {response.sendStatus(400); return null;}
 // console.log('username: ', username);
@@ -135,7 +135,7 @@ exports.linksGet = function (request, response) {
 
 exports.urls = function (req, res) {
   var username = req.query.username;
-  console.log('username:', username);
+  // console.log('username:', username);
   // db.fetchUrls()
   db.fetchLinksForUser(username)
     .then(function (data) {

@@ -21,7 +21,7 @@ exports.init = function() {
   chrome.runtime.onConnect.addListener(function(port){
     if(port.name === 'popup_setting') {
       var localData = JSON.parse(localStorage.keepingTabs);
-console.log('localData:', localData);
+// console.log('localData:', localData);
     port.postMessage({ // UI init settings
       time: localData.time ? localData.time : timer.timeLimit,
       active: localData.active ? localData.active : true,
@@ -125,7 +125,7 @@ console.log('localData:', localData);
     var tabId = activeInfo.tabId;
     currentTabs[tabId] = true;
 
-    console.log(currentTabs);
+    // console.log(currentTabs);
 
     // Chrome.updateCurrentTabs(queue)//this will remove tabs from the queue and the currentTabs object if they are no longer open
     Chrome.getActiveTabs()
@@ -148,9 +148,9 @@ console.log('localData:', localData);
     //   return Chrome.findOldTabId(tabIds, currentTabs);
     // })
     .then(function (oldTabId) {
-      console.log('compare tab ids:', oldTabId, tabId);
+      // console.log('compare tab ids:', oldTabId, tabId);
       if (oldTabId !== tabId && oldTabId !== null) {
-        console.log('oldTab: ', oldTabId);
+        // console.log('oldTab: ', oldTabId);
         return Chrome.getTab(oldTabId)
         .then(Chrome.setData)
         .then(function (dataObj) {
@@ -163,17 +163,17 @@ console.log('localData:', localData);
             queue.enqueue(String(oldTabId), dataObj.data);
             timer.initialize(queue);
 
-console.log('data: ', dataObj);
-console.log('queue: ', queue);
+// console.log('data: ', dataObj);
+// console.log('queue: ', queue);
 
 
             return Promise.resolve('queued tab#' + oldTabId);
-        })
+        });
       }
     })
     .then(function (message) {
       console.log(message);
-    })
+    });
 
 
 

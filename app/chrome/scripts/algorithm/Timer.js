@@ -12,9 +12,9 @@ var Timer = {
   // timeLimit: localData.time ? localData.time : 1000 * 60 * 60, //default 60 mins timelimit
   timeLimit: 1000 * 60 * 60, //default 60 mins timelimit
   initialize: function (queue, time) {
-    console.log('initialize timer');
-    console.log('time limit: ', this.timeLimit);
-    console.log('queue: ', queue);
+    // console.log('initialize timer');
+    // console.log('time limit: ', this.timeLimit);
+    // console.log('queue: ', queue);
 
     clearTimeout(this.timeout);
     this.isActive = true;
@@ -42,7 +42,7 @@ var Timer = {
   removeTab: function (queue) {
     var tab = queue.dequeue();
 
-    console.log(tab, 'TABID');
+    // console.log(tab, 'TABID');
 
     try {
       // chrome.tabs.query({'active':true}, function (tabs) {
@@ -82,7 +82,7 @@ var Timer = {
 
     }
     
-    console.log('Dequeued Tab: ', tab);
+    // console.log('Dequeued Tab: ', tab);
     this.initialize(queue);
   }
 };
