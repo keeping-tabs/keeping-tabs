@@ -12,7 +12,7 @@ var app = angular.module('keepingTabs', [
 
 app.config(function($urlRouterProvider, $stateProvider) {
   
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise('/urls');
   console.log('main');
 
 });

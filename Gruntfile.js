@@ -98,7 +98,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:server', 'mochaTest:server']
       },
       client: {
-        files: ['./app/client/src/*.js'],
+        files: ['./app/client/src/**/*.js'],
         tasks: ['jshint:client', 'build-client']
       }
     },

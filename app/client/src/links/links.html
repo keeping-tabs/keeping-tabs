@@ -1,4 +1,22 @@
-<h1>Hi, I am Links!</h1>
-<ul>
-  <li ng-repeat="link in links">{{link}}</li>
-</ul>
+<section class="mw7 center">
+  <h1>Hi, I am Links!</h1>
+  <ul class="list-group">
+    <li class="list-group-item" ng-repeat="link in links">
+      <span class="badge">{{link.created | date : 'shortDate'}}</span>
+      <div class="media">
+        <!-- <div class="media-left">
+          <a href="#">
+            <img class="media-object" src="..." alt="...">
+          </a>
+        </div> -->
+        <div class="media-body">
+          <h4 class="media-heading">{{link.title}}</h4>
+          <a class="link" ng-href="{{link.url}}" target="_blank">{{link.url}}</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="jumbotron" ng-if="links.length === 0">
+    <h1 class="tc">:(</h1>
+  </div>
+</section>
