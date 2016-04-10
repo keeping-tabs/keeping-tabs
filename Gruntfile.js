@@ -76,7 +76,7 @@ module.exports = function(grunt) {
       client: {
         files: {
           src: [
-            './app/client/**/*.js',
+            './app/client/src/**/*.js',
             '!./app/client/spec/*.js'
           ]
         }
@@ -98,8 +98,8 @@ module.exports = function(grunt) {
         tasks: ['jshint:server', 'mochaTest:server']
       },
       client: {
-        files: ['./app/client/**/*.js'],
-        tasks: ['jshint:client']
+        files: ['./app/client/src/**/*.js'],
+        tasks: ['jshint:client', 'build-client']
       }
     },
 
@@ -111,6 +111,10 @@ module.exports = function(grunt) {
       'chrome-popup': {
         src: ['./app/chrome/popup/**/*.js'],
         dest: './app/chrome/dist/popup.js'
+      },
+      client: {
+        src: ['./app/client/src/**/*.js'],
+        dest: './app/client/dist/app.js'
       }
     },
 
@@ -120,6 +124,13 @@ module.exports = function(grunt) {
           './node_modules/jquery/dist/jquery.min.js'
         ],
         dest: './app/chrome/dist/vendors.js'
+      },
+      'client': {
+        src: [
+          './node_modules/angular/angular.min.js',
+          './node_modules/angular-ui-router/release/angular-ui-router.min.js'
+        ],
+        dest: './app/client/dist/vendors.js'
       }
     },
 
@@ -160,6 +171,15 @@ module.exports = function(grunt) {
             './app/chrome/popup/popup.css'
           ]
         }
+      },
+      client: {
+        files: {
+          './app/client/dist/style.css': [
+            './node_modules/bootstrap/dist/css/bootstrap.min.css',
+            './node_modules/tachyons/css/tachyons.min.css',
+            './app/client/src/**/*.css'
+          ]
+        }
       }
     },
 
@@ -175,6 +195,12 @@ module.exports = function(grunt) {
         flatten: true,
         src: './app/chrome/src/keeping-tabsicon.png',
         dest: './chrome_ext/prod/'
+      },
+      client: {
+        expand: true,
+        cwd: './app/client/src/',
+        src: ['**/*.html'],
+        dest: './app/client/dist/'
       }
     }
   });
@@ -217,8 +243,16 @@ module.exports = function(grunt) {
     'build-manifest'
   ]);
 
+  grunt.registerTask('build-client', [
+    'browserify:client',
+    'concat:client',
+    'cssmin:client',
+    'copy:client'
+  ]);
+
   grunt.registerTask('build', [
-    'build-chrome'
+    'build-chrome',
+    'build-client'
   ]);
   
   grunt.registerTask('default', [

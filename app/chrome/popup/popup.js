@@ -135,6 +135,6 @@
     }
     
     $username.find('label').text(_settings.username ? 'Hello ' + _settings.username : '');
-    $links.find('a').attr('href', _settings.username ? 'localhost:8080/urls?username=' + _settings.username : ''/*route to signup*/)
+    // $links.find('a').attr('href', _settings.username ? 'localhost:8080/urls?username=' + _settings.username : ''/*route to signup*/)
   }
 })();

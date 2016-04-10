@@ -126,6 +126,7 @@ exports.init = function() {
 
   function handleOnActivated(activeInfo){
     var tabId = activeInfo.tabId;
+
     currentTabs[tabId] = true;
 
     // console.log(currentTabs);
@@ -136,10 +137,10 @@ exports.init = function() {
     .then(function (activeTabIds) {
       var oldTabId = null;
       for (var tabId in currentTabs) {
-        if( 
+        if(
           !activeTabIds.some(function (activeTabId) {
             return activeTabId === Number(tabId);
-          }) 
+          })
         ) {
           oldTabId = Number(tabId);
         }

@@ -40,7 +40,7 @@ var Chrome = (function () {
         // console.log('post to for user: ', username);
         $.ajax({
           type: 'POST',
-          url: ENV.url + '/links',
+          url: ENV.url + '/api/links',
           data: {
             urls: urls,
             username: username

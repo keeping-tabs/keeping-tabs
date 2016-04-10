@@ -9,9 +9,9 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 
 db.serialize(function() {
   //Uncomment to drop tables when restarting the server
-  // db.run('DROP TABLE IF EXISTS links');
-  // db.run('DROP TABLE IF EXISTS users');
-  // db.run('DROP TABLE IF EXISTS users_links_join');
+  db.run('DROP TABLE IF EXISTS links');
+  db.run('DROP TABLE IF EXISTS users');
+  db.run('DROP TABLE IF EXISTS users_links_join');
 
   db.run('CREATE TABLE IF NOT EXISTS links (id INTEGER PRIMARY KEY ASC, title TEXT, url TEXT UNIQUE, created INTEGER)');
   db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, created INTEGER)');
@@ -237,70 +237,85 @@ db.fetchLinkId = function (url) {
 
 
 
-/*
-var log = function (data, message) {
-  console.log(data, message ? message : ' : resolved in promise');
-  return Promise.resolve(data);
-};
-// Save Users
-db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
-.then(log)
-// then fetch the users
-.then(db.fetchUsers)
-.then(log)
-// save urls
-.then(function () {
-  return db.saveUrls(['a','b','c']);
-})
-.then(log)
-// then fetch the urls
-.then(function (){
-  return db.fetchUrls()
-  .then(log);
-})
-.then(function () {
-  console.log('attempt to save user-url join');
-  return db.saveUrlUserJoin(1, 1)
-  .then(log)
-  .then(function (){
-    return db.saveUrlUserJoin(1, 3);
-  })
-  .then(log)
-  .then(function (){
-    return db.saveUrlUserJoin(2, 3);
-  })
-  .then(log)
-  .then(function (){
-    return db.saveUrlUserJoin(2, 2);
-  })
-  .then(log)
-  .then(function (){
-    return db.saveUrlUserJoin(3, 1);
-  })
-  .then(log);
-})
-.then(function () {
-  return db.fetchUserId('louie');
-})
-.then(log)
-.then(function () {
-  return db.joinTable('users', 'users_links_join', ' users.username="louie" and users.id = users_links_join.userId', 'INNER', 'linkId');
-})
-.then(log)
-.then(function () {
-  return db.fetchLinksForUser('louie');
-})
-.then(log)
-.then(function () {
-  console.log('using save links');
-  return db.saveLinks([{url:'d', title:'D'}, {url:'e', title:'E'}, {url:'f', title:'F'}], 'louie');
-})
-.then(function () {
-  console.log('fetch');
-  return db.fetchLinksForUser('louie');
-})
-.then(log);
-*/
+
+
+// var log = function (data, message) {
+//   console.log(data, message ? message : ' : resolved in promise');
+//   return Promise.resolve(data);
+// };
+
+// // Save Users
+// db.saveUsers(['louie', 'jake', 'justin', 'ivan'])
+// .then(log)
+
+// // then fetch the users
+// .then(db.fetchUsers)
+// .then(log)
+
+
+// // save urls
+// .then(function () {
+//   return db.saveUrls(['a','b','c']);
+// })
+// .then(log)
+
+// // then fetch the urls
+// .then(function (){
+//   return db.fetchUrls()
+//   .then(log);
+// })
+
+// .then(function () {
+
+//   console.log('attempt to save user-url join');
+//   return db.saveUrlUserJoin(1, 1)
+//   .then(log)
+
+//   .then(function (){
+//     return db.saveUrlUserJoin(1, 3);
+//   })
+//   .then(log)
+
+//   .then(function (){
+//     return db.saveUrlUserJoin(2, 3);
+//   })
+//   .then(log)
+
+//   .then(function (){
+//     return db.saveUrlUserJoin(2, 2);
+//   })
+//   .then(log)
+
+//   .then(function (){
+//     return db.saveUrlUserJoin(3, 1);
+//   })
+//   .then(log);
+// })
+// .then(function () {
+//   return db.fetchUserId('louie');
+// })
+// .then(log)
+
+
+// .then(function () {
+//   return db.joinTable('users', 'users_links_join', ' users.username="louie" and users.id = users_links_join.userId', 'INNER', 'linkId');
+// })
+// .then(log)
+// .then(function () {
+//   return db.fetchLinksForUser('louie');
+// })
+// .then(log)
+
+// .then(function () {
+//   console.log('using save links');
+//   return db.saveLinks([{url:'d', title:'D'}, {url:'e', title:'E'}, {url:'f', title:'F'}], 'louie');
+// })
+// .then(function () {
+//   console.log('fetch');
+//   return db.fetchLinksForUser('louie');
+// })
+// .then(log);
+
 
 
 
