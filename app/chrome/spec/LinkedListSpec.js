@@ -1,4 +1,6 @@
 
+/* globals chai: false, Link:false, LinkedList:false */
+
 var assert = chai.assert;
 chai.should();
 var expect = chai.expect;
@@ -57,6 +59,6 @@ describe('Linked List tests', function () {
   });
   it('the linked-list should throw an error when pushing or unshifting something that is not a link', function () {
     var list = new LinkedList();
-    expect(function(){list.push('not a link')}).to.throw(Error);
+    expect(function(){list.push('not a link');}).to.throw(Error);
   });
 });
