@@ -83,7 +83,7 @@
   });
 
   $inputUsername.on('blur', function () {
-    username = $inputUsername.val();
+    var username = $inputUsername.val();
 
     console.log('username blur: ' + username);
 

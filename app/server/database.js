@@ -8,7 +8,7 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 });
 
 db.serialize(function() {
-  // //Uncomment to drop tables when restarting the server
+  //Uncomment to drop tables when restarting the server
   // db.run('DROP TABLE IF EXISTS links');
   // db.run('DROP TABLE IF EXISTS users');
   // db.run('DROP TABLE IF EXISTS users_links_join');
