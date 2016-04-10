@@ -2,11 +2,20 @@
 /* globals chrome: false */
 var Chrome = require('./ChromeHelpers.js');
 
+// var localStorage = localStorage ? localStorage : {keepingTabs: {}};
+
+// var localData = localStorage ? JSON.parse(localStorage.keepingTabs) : {};
+
 var Timer = {
   isActive: false,
   timeout: setTimeout(function() {}, 0),
+  // timeLimit: localData.time ? localData.time : 1000 * 60 * 60, //default 60 mins timelimit
   timeLimit: 1000 * 60 * 60, //default 60 mins timelimit
   initialize: function (queue, time) {
+    // console.log('initialize timer');
+    // console.log('time limit: ', this.timeLimit);
+    // console.log('queue: ', queue);
+
     clearTimeout(this.timeout);
     this.isActive = true;
   
@@ -33,7 +42,7 @@ var Timer = {
   removeTab: function (queue) {
     var tab = queue.dequeue();
 
-    console.log(tab, 'TABID');
+    // console.log(tab, 'TABID');
 
     try {
       // chrome.tabs.query({'active':true}, function (tabs) {
@@ -62,7 +71,12 @@ var Timer = {
                 // console.log('tab is active: ' + bool);
                 if (!bool) {
                   chrome.tabs.remove(Number(tab.key));
-                  Chrome.postTabs([tab.data.url]);
+
+                  // Chrome.getAllTabs();
+                  // .then(function (allTabs) {
+                  //   allTabs.map()
+                  // });
+                  Chrome.postTabs([tab.data.url], JSON.parse(localStorage.keepingTabs).username);
                 }
               });
             }
@@ -73,7 +87,7 @@ var Timer = {
 
     }
     
-    console.log('Dequeued Tab: ', tab);
+    // console.log('Dequeued Tab: ', tab);
     this.initialize(queue);
   }
 };

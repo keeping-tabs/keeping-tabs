@@ -3,7 +3,7 @@ var server = require('../../index.js');
 var supertest = require('supertest');
 
 var request = supertest.agent(server);
- 
+var db = require('../database.js');
 /*global beforeEach, afterEach, describe, expect, it, spyOn, xdescribe, xit */
 
 describe('server', function() {
@@ -57,6 +57,7 @@ describe('server', function() {
   });
 
   describe('API', function() {
+    
     describe('Signup and Login', function() {
       it('POST /api/signup', function(done) {
         request
@@ -74,9 +75,12 @@ describe('server', function() {
     });
 
     it('POST /api/links', function(done) {
+
+      db.saveUsers(['temp']);
+
       request
         .post('/api/links')
-        .send({ urls: ['http://apple.com'] })
+        .send({ urls: ['http://apple.com'], username: 'temp' })
         .expect(201, done);
     });
   });

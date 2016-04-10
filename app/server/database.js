@@ -168,7 +168,7 @@ db.saveUrls = function (urls) {
      db.insertInto('links', ['Title ' + index, url, Date.now()], true)
      .then(function () {
       if (index === urls.length - 1) {
-        console.log('' + (index + 1) + ' urls were saved');
+        // console.log('' + (index + 1) + ' urls were saved');
         resolve('' + urls.length + ' users were saved');
       }
      });
@@ -177,7 +177,7 @@ db.saveUrls = function (urls) {
 };
 
 db.saveLinks = function (links, username) {
-    console.log(username);
+    // console.log('username:', username);
   if (!(Array.isArray(links))) {
     throw new Error('expected links argument to be an array. Instead typeof links === ' + typeof links);
   } else if (links.length === 0) {
@@ -188,27 +188,36 @@ db.saveLinks = function (links, username) {
   return new Promise(function (resolve) {
     db.fetchUserId(username)
     .then(function (userId) {
-      console.log(userId);
+      // console.log('userId:', userId);
       links.forEach(function (link, index) {
-        console.log('link: ',link);
-        db.insertInto('links', [link.title, link.url, Date.now()], true)
+        db.fetchTable('links', 'id', 'url="' + link.url + '"')
+        .then(function (ids) {
+          // console.log('ids: ', ids);
+          // console.log('link:', link);
+          if (ids.length === 0) {
+           return db.insertInto('links', [link.title, link.url, Date.now()], true);
+          }
+          return Promise.resolve();
+        })
         .then(function () {
           return db.fetchLinkId(link.url);
         })
         .then(function (linkId) {
-          console.log(linkId);
+          // console.log('linkId:', linkId);
+          // console.log('userId:', userId);
           return db.saveUrlUserJoin(userId[0].id, linkId[0].id);
         })
-        .then(log)
+        // .then(log)
        
 
-       .then(function () {
-        if (index === links.length - 1) {
-          // console.log('' + (index + 1) + ' links were saved');
-          resolve('' + links.length + ' links were saved');
-        }
-       });
-    });
+        .then(function () {
+          // console.log('index:', index);
+          if (index === links.length - 1) {
+            // console.log('' + (index + 1) + ' links were saved');
+            resolve('' + links.length + ' links were saved');
+          }
+        });
+      });
     });
   });
 
@@ -316,8 +325,3 @@ db.fetchLinkId = function (url) {
 
 
 module.exports = db;
-
-
-
-
-
