@@ -1,6 +1,9 @@
 
 /* globals chrome: false */
 
+localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
+
+
 //assumes instance of Queue exists
 var Queue = require('./Queue.js');
 var Timer = require('./Timer.js');
