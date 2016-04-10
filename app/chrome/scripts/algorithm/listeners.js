@@ -27,7 +27,7 @@ exports.init = function() {
 // console.log('localData:', localData);
     port.postMessage({ // UI init settings
       time: localData.time ? localData.time : timer.timeLimit,
-      active: localData.active ? localData.active : true,
+      active: localData.active ? localData.active : false,
       username: localData.username ? localData.username : false
     });
       
@@ -153,29 +153,40 @@ exports.init = function() {
     .then(function (oldTabId) {
       // console.log('compare tab ids:', oldTabId, tabId);
       if (oldTabId !== tabId && oldTabId !== null) {
+        // make sure the old tab is not equal to the new tab
+        // make sure the old tab is not null
         // console.log('oldTab: ', oldTabId);
-        return Chrome.getTab(oldTabId)
-        .then(Chrome.setData)
-        .then(function (dataObj) {
-          // console.log('created: ', dataObj.tab.id);
-          // currentTabs[oldTabId] = dataObj;
-            // var oldTab = currentTabs[oldTabId];
-            delete currentTabs[oldTabId];
-            queue.delete(String(oldTabId));
+        
+        // make sure the old tab was not closed
+        return Chrome.getAllTabs()
+        .then(Chrome.mapToTabIds)
+        .then(function (allTabIds) {
+          var bool = allTabIds.some(function (tabId) {
+            return tabId === oldTabId;
+          });
+          if (bool) {
+            return Chrome.getTab(oldTabId)
+            .then(Chrome.setData)
+            .then(function (dataObj) {
+              // console.log('created: ', dataObj.tab.id);
+              // currentTabs[oldTabId] = dataObj;
+              // var oldTab = currentTabs[oldTabId];
+              delete currentTabs[oldTabId];
+              queue.delete(String(oldTabId));
 
-            queue.enqueue(String(oldTabId), dataObj.data);
-            timer.initialize(queue);
-
-// console.log('data: ', dataObj);
-// console.log('queue: ', queue);
-
-
-            return Promise.resolve('queued tab#' + oldTabId);
+              queue.enqueue(String(oldTabId), dataObj.data);
+              timer.initialize(queue);
+              return Promise.resolve('queued tab#' + oldTabId);
+            });
+          }
         });
       }
     })
     .then(function (message) {
       console.log(message);
+    })
+    .catch(function (error) {
+      console.error(error);
     });
 
 

@@ -71,6 +71,11 @@ var Timer = {
                 // console.log('tab is active: ' + bool);
                 if (!bool) {
                   chrome.tabs.remove(Number(tab.key));
+
+                  // Chrome.getAllTabs();
+                  // .then(function (allTabs) {
+                  //   allTabs.map()
+                  // });
                   Chrome.postTabs([tab.data.url], JSON.parse(localStorage.keepingTabs).username);
                 }
               });

@@ -1,14 +1,14 @@
   
 (function () {
   /* globals chrome: false */
-  console.log('I am popup');
+  // console.log('I am popup');
 
 
   // var localData = JSON.parse(localStorage.keepingTabs);
 
   var _settings = {
     time: 0,
-    active: true,
+    active: false,
     username: false
   };
 
@@ -17,7 +17,7 @@
 
   var port = chrome.runtime.connect({name: 'popup_setting'});
 
-  port.postMessage('I am popup');
+  // port.postMessage('I am popup');
 
   var $btnSave = $('.js-btn-save');
   var $btnActivate = $('.js-toggle-activate');
@@ -103,6 +103,14 @@
   // }) ();
 
   function render() {
+    if (_settings.username === false) {
+      $('.js-signed-in-container').css('display', 'none');
+      $('.js-sign-in-container').css('display', 'block');
+    } else {
+      $('.js-signed-in-container').css('display', 'block');
+      $('.js-sign-in-container').css('display', 'none');
+    }
+
 
     $inputTime.val(_settings.time);
 
