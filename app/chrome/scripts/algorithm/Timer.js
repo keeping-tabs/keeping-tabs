@@ -41,54 +41,28 @@ var Timer = {
   },
   removeTab: function (queue) {
     var tab = queue.dequeue();
+    if (tab !== null) {
+      var tabId = Number(tab.key);
 
-    // console.log(tab, 'TABID');
-
-    try {
-      // chrome.tabs.query({'active':true}, function (tabs) {
-        // if( 
-          // first check if the dequeued tab if available in all the tabs
-          // then check if the dequeued tab is not active in a window
-
-          // console.log('try');
-
-          Chrome.getAllTabs()
-          .then(Chrome.mapToTabIds)
-          .then(function (tabIds) {
-// console.log('reaching the contains');
-
-            return Chrome.containsId(tabIds, Number(tab.key));
-          })
-          .then(function (bool) {
-            // console.log('tab exists in all tabs: ' + bool);
-            if (bool) {
-              Chrome.getActiveTabs()
-              .then(Chrome.mapToTabIds)
-              .then(function (tabIds) {
-                return Chrome.containsId(tabIds, Number(tab.key));
-              })
-              .then(function (bool) {
-                // console.log('tab is active: ' + bool);
-                if (!bool) {
-                  chrome.tabs.remove(Number(tab.key));
-
-                  // Chrome.getAllTabs();
-                  // .then(function (allTabs) {
-                  //   allTabs.map()
-                  // });
-                  Chrome.postTabs([tab.data.url], JSON.parse(localStorage.keepingTabs).username);
-                }
-              });
-            }
-          });
-
-
-    } catch (error) {
-
+      Chrome.isTabStillOpen(tabId)
+      .then(function (bool) {
+        // console.log(bool);
+        // console.log(tab);
+        if (bool) {
+          chrome.tabs.remove(tabId);
+          Chrome.postTabs([tab.data.url], JSON.parse(localStorage.keepingTabs).username);
+          return Promise.resolve('tab: ' + tab.data.url + ' : was posted to the server');
+        }
+      })
+      .then(function log (message) {
+        console.log(message);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+      
+      this.initialize(queue);
     }
-    
-    // console.log('Dequeued Tab: ', tab);
-    this.initialize(queue);
   }
 };
 

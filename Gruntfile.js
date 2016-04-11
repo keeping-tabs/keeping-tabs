@@ -220,6 +220,7 @@ module.exports = function(grunt) {
     manifestProd['name'] = manifestProd.name + ' PROD';
     manifestProd['content_security_policy'] = 'script-src \'self\' https://keeping-tabs.herokuapp.com; object-src \'self\'';
     manifestProd['permissions'].push('https://keeping-tabs.herokuapp.com/*');
+    manifestProd['externally_connectable'] = {matches: ['*://keeping-tabs.herokuapp.com/*']};
 
     grunt.file.write('./chrome_ext/prod/manifest.json', JSON.stringify(manifestProd, null, 2));
 
@@ -229,6 +230,7 @@ module.exports = function(grunt) {
     manifestDev['name'] = manifestDev.name + ' DEV';
     manifestDev['content_security_policy'] = 'script-src \'self\' http://localhost:8080; object-src \'self\'';
     manifestDev['permissions'].push('http://localhost/*');
+    manifestDev['externally_connectable'] = {matches: ['http://localhost/*']};
 
     grunt.file.write('./chrome_ext/dev/manifest.json', JSON.stringify(manifestDev, null, 2));
   });

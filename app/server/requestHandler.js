@@ -1,98 +1,13 @@
 
-////////////////////////////////////////////////////////////////////////////////
-//////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
-
-// this section is temporary awaiting the database logic
-
-// var tempUrls = {};
-
-// var tempSetUrls = function (urls) {
-//   // this should be setting the urls in the database, 
-//   // but for now we will use the tempUrls array
-  
-//   // for each url in the urls array
-//   urls.forEach(function (url) {
-//     //create or overwrite the url property in the tempUrls object
-//     tempUrls[url] = true;
-//   });
-
-//   // if the complete method has been set to be a function 
-//   if (typeof tempSetUrls.complete === 'function' ) {
-//     // then call the complete method
-//     tempSetUrls.complete('resolved in the tempSetUrls');
-//   }
-// };
-
-//////////////////////// TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP  TEMP//
-////////////////////////////////////////////////////////////////////////////////
-
 var db = require('./database.js');
 var _ = require('underscore');
 var urlModule = require('url');
 
 
-// var filterNewUrlsOnly = function (urls) {
-//   return db.fetchTable('links', 'url', urls.map(function (url) {return 'url = "' + url + '"';}).join(' or '))
-//     .then(function (data) {
-//       var existingUrls = data.map(function (element) {return element.url;});
-//       var difference = _.difference(urls, existingUrls);
-//       return Promise.resolve(difference);
-//     });
-// };
-
-// var setUrls = function (urls) {
-//   return new Promise(function (resolve, reject) {
-//     filterNewUrlsOnly(urls)
-//     .then(db.saveUrls)
-//     .then(resolve)
-//     .catch(reject);
-//   });
-// };
 
 var setLinks = function (links, username) {
+// console.log('save links from: ', username);
   return db.saveLinks(links, username);
-  // return new Promise(function (resolve, reject) {
-  //   filterNewUrlsOnly(links.map(function (link) {return link.url;}))
-  //   .then(function (newUrls) {
-  //     console.log('new: ',newUrls);
-  //     return new Promise(function (resolve) {
-  //       var newLinks = links.filter(function (link) {
-  //         return newUrls.some(function (url) {return url === link.url;});
-  //       });
-  //       var oldLinks = _.difference(links, newLinks);
-
-  //       console.log('old: ', oldLinks);
-  //       console.log('username: ', username);
-  //       db.fetchUserId(username)
-  //       .then(function (userId) {
-  //         console.log(userId);
-  //         if (oldLinks.length === 0) {resolve(newLinks);}
-  //         oldLinks.forEach(function (link) {
-  //           db.fetchLinkId(link.url)
-  //           .then(function (linkId) {
-  //             return db.saveUrlUserJoin(userId[0].id, linkId[0].id);
-  //           })
-  //           .then(function () {
-  //           if (index === links.length - 1) {
-  //             // console.log('' + (index + 1) + ' links were saved');
-  //             resolve(newLinks);
-  //           }
-  //          });
-  //         });
-  //       });
-  //     })
-  //     .then(function (message) {console.log('new Links: ',message);return Promise.resolve(message);})
-  //     .then(resolve);
-  //   })
-
-
-  // })
-  // .then(function (links) {
-  //   console.log('links: ', links);
-  //   db.saveLinks(links, username);}
-  // )
-  // .then(resolve)
-  // .catch(reject);
 };
 
 
@@ -100,11 +15,9 @@ exports.linksPost = function (request, response) {
   var urls = request.body.urls;
   // console.log('url: ', urls);
   var username = request.body.username;
-  // if (!username) {response.sendStatus(400); return null;}
-// console.log('username: ', username);
-  // console.log(urlModule.parse(urls[0]).host.split('.')[1]);
  
-  // setUrls(urls)
+// console.log('post received from: ', username);
+
   setLinks(urls.map(function (url) {return {url: url, title: urlModule.parse(url).host.split('.')[1]};}), username)
     .then(function () {
       response.sendStatus(201);
@@ -122,8 +35,15 @@ exports.linksPost = function (request, response) {
 // what we have now is just an example
 
 exports.linksGet = function (request, response) {
-  db.fetchUrls()
+  var username = request.query.username;
+
+  // console.log(username);
+
+
+  db.fetchLinksForUser(username)
     .then(function (data) {
+
+      // console.log('---links for ' + username + ' : ' , data);
       response.send(JSON.stringify(data));
     })
   .catch(function (error) {
