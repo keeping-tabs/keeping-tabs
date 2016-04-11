@@ -38,8 +38,10 @@ auth.factory('Auth', function($http, chromeID) {
     return $http.post('/api/signup', {username: user.username, password: user.password})
     .then(function(result){
       console.log('token: ', result.data.token);
+      var token = result.data.token;
 
-      setlocalStorage(user);
+      setlocalStorage(user, token);
+
 
     }).catch(function(reason) {
       console.error('Login failed: ', reason.data);
@@ -59,10 +61,11 @@ auth.factory('Auth', function($http, chromeID) {
     });
   }
 
-  function setlocalStorage(user) {
+  function setlocalStorage(user, token) {
     var local = JSON.parse(localStorage.keepingTabs);
 
     local.username = user.username; // should change to storing JWT
+    local.token = token;
     localStorage.keepingTabs = JSON.stringify(local);
 
     chrome.runtime.sendMessage(chromeID, {username: user.username},

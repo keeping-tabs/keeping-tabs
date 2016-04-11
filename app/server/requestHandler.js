@@ -36,6 +36,9 @@ exports.linksPost = function (request, response) {
 
 exports.linksGet = function (request, response) {
   var username = request.query.username;
+   // var username = request.user.username;
+
+
 
   // console.log(username);
 

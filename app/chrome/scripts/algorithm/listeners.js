@@ -70,6 +70,13 @@ exports.init = function() {
           Chrome.setLocalStorage({username: msg.username});
           port.postMessage(msg);
         }
+        if(msg['sign-out'] !== undefined) {
+          console.log('signout ');
+          // _settings.username = msg.username;
+          // Chrome.setLocalStorage({username: msg.username});
+          localStorage.keepingTabs = '{}';
+          port.postMessage(msg);
+        }
 
       });
     }

@@ -32,6 +32,9 @@
 
   var $links = $('.js-links');
 
+  var $signout = $('.js-sign-out-container');
+  var $signoutButton = $('.js-btn-sign-out');
+
   $custom.hide();
 
   // listen to background
@@ -48,6 +51,13 @@
     if(msg.username !== undefined) {
       console.log('set username: ', msg.username);
       _settings.username = msg.username;
+    }
+    if(msg['sign-out'] !== undefined) {
+      _settings = {
+        time: 0,
+        active: false,
+        username: false
+      }
     }
 
     render();
@@ -94,6 +104,11 @@
     // Chrome.setLocalStorage({username: _settings.username});
   });
 
+  $signoutButton.on('click', function () {
+    console.log('sign-out clicked');
+    port.postMessage({'sign-out': 'true'});
+  });
+
 
   // (function initializeSettings () {
   //   $btnSave.trigger('click');
@@ -106,9 +121,11 @@
     if (_settings.username === false) {
       $('.js-signed-in-container').css('display', 'none');
       $('.js-sign-in-container').css('display', 'block');
+      $signout.css('display', 'none')
     } else {
       $('.js-signed-in-container').css('display', 'block');
       $('.js-sign-in-container').css('display', 'none');
+      $signout.css('display', 'block');
     }
 
 

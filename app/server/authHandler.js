@@ -1,4 +1,5 @@
 var db = require('./database.js');
+var jwt = require('jsonwebtoken');
 
 var Auth = function() {
   return {
@@ -40,8 +41,12 @@ var Auth = function() {
       } else {
         db.saveUsers([username]).then(function() {
           console.log('User '+ username + ' created');
+
+          var token = jwt.sign({username: username}, 'keepingTabsIsTheBoss');
+
+          console.log('attempt to set token')
           
-          res.status(201).send({token: username + 'faketoken'});
+          res.status(201).send({token: token});
 
         });
       }
