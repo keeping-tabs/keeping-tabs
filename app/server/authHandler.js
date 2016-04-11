@@ -41,7 +41,7 @@ var Auth = function() {
         db.saveUsers([username]).then(function() {
           console.log('User '+ username + ' created');
           
-          res.status(201).send({token: username+'faketoken'});
+          res.status(201).send({token: username + 'faketoken'});
 
         });
       }

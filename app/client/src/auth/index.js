@@ -35,7 +35,7 @@ auth.factory('Auth', function($http, chromeID) {
   function signup(user) {
     /* globals chrome:false */
     console.log('signup', user);
-    return $http.post('/api/signup', {username: user, password: user.password})
+    return $http.post('/api/signup', {username: user.username, password: user.password})
     .then(function(result){
       console.log('token: ', result.data.token);
 
