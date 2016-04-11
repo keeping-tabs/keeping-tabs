@@ -84,28 +84,26 @@ exports.init = function() {
 
   function handleOnCreated(tab){
     Chrome.tabHasLoaded(tab)
-    .then(function (tab) {
-      return Chrome.getActiveTabs()
-      .then(function (activeTabs) {
-        // is the created tab active
-        var bool = activeTabs.some(function (activeTab) {
-          return activeTab.id === tab.id;
-        });
-        if (!bool) {
-          //created tab is not active. So enqueue it
-          queue.enqueue(String(tab.id), Chrome.data(tab));
-          timer.initialize(queue);
+    .then(Chrome.isTabActive)
+    .then(function (bool) {
 
-        }
-        return Promise.resolve('queued tab ' + tab.id);
-      })
-      .then(function log (message) {
-        console.log(message);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+      // console.log(bool, ' : new tab is active');
+      if (!bool) {
+        //created tab is not active. So enqueue it
+        queue.enqueue(String(tab.id), Chrome.data(tab));
+        timer.initialize(queue);
+      }
+      return Promise.resolve('queued tab ' + tab.id);
     })
+    .then(function log (message) {
+      console.log(message);
+      return Promise.resolve(message);
+    })
+    .catch(function (error) {
+      console.error(error);
+      // return Promise.reject(error);
+      return Promise.resolve();
+    });
   }
 
   function handleOnUpdated(tabId){
@@ -176,19 +174,21 @@ exports.init = function() {
       } 
       if (oldTab.length === 0) {
         // Do nothing. The new tab was opened in a new window.
+        return Promise.resolve('no active tabs moved away from');
       } 
       if (oldTab.length === 1) {
-        var oldTab = oldTab[0];
-        queue.enqueue(String(oldTab.id), Chrome.data(oldTab));
-        timer.initialize(queue);
+        var oldTabId = oldTab[0].id;
+        return Chrome.appendToQueue(oldTabId, queue, timer);
       } 
-      return Promise.resolve('queued tab ' + oldTab.id);
     })
     .then(function log (message) {
       console.log(message);
+      return Promise.resolve(message);
     })
     .catch(function (error) {
       console.error(error);
+      // return Promise.reject(error);
+      return Promise.resolve();
     });
   }
 

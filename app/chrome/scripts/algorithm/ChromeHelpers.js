@@ -57,6 +57,16 @@ var Chrome = (function () {
         chrome.tabs.onUpdated.addListener(listener);
       });
     },
+    isTabActive: function (tab) {
+      return Chrome.getActiveTabs()
+      .then(function (activeTabs) {
+        // is the created tab active
+        var bool = activeTabs.some(function (activeTab) {
+          return activeTab.id === tab.id;
+        });
+        return Promise.resolve(bool);
+      });
+    },
     isTabStillOpen : function (tabId) {
       return Chrome.getAllTabs()
       .then(function (allTabs) {
@@ -71,7 +81,25 @@ var Chrome = (function () {
         url: tab.url,
         createdAt: Date.now()
       };
-    }/*,
+    },
+    appendToQueue: function (oldTabId, queue, timer) {
+      if (!oldTabId) {
+        return Promise.reject('oldTabId is undefined');
+      }
+      return Chrome.isTabStillOpen(oldTabId)
+      .then(function (bool) {
+        if (bool) {
+          return Chrome.getTab(oldTabId)
+          .then(function (oldTab) {
+            console.log('old tab here: ',oldTab);
+            queue.enqueue(String(oldTab.id), Chrome.data(oldTab));
+            timer.initialize(queue);
+            return Promise.resolve('queued tab ' + oldTab.id);
+          });
+        }
+        return Promise.reject('the oldTab has closed so it cannot be enqueued');
+      });
+    },/*,
 
     mapToTabIds : function (tabs) {
       var tabIds = [];
