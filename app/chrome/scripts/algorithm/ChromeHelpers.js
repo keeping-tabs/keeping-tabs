@@ -17,7 +17,7 @@ var Chrome = (function () {
     postTabs : function (urls, username) {
       // sending object
       return new Promise(function(resolve,reject){
-        // console.log('post to for user: ', username);
+        console.log('post to for user: ', username);
         $.ajax({
           type: 'POST',
           url: ENV.url + '/api/links',
@@ -48,7 +48,7 @@ var Chrome = (function () {
     tabHasLoaded: function (tab) {
       return new Promise(function (resolve) {
         var listener = function (tabId , info) {
-          if (info.status === "complete") {
+          if (info.status === 'complete') {
               // I am not sure why the chrome api throws an error with this. I want to remove the listener after it has fired. I realize that the Promise will only be resolved once, but it seems clunky.
               // chrome.onUpdated.removeListener(listener);
               resolve(tab);

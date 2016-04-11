@@ -6,6 +6,7 @@ var urlModule = require('url');
 
 
 var setLinks = function (links, username) {
+// console.log('save links from: ', username);
   return db.saveLinks(links, username);
 };
 
@@ -15,6 +16,8 @@ exports.linksPost = function (request, response) {
   // console.log('url: ', urls);
   var username = request.body.username;
  
+// console.log('post received from: ', username);
+
   setLinks(urls.map(function (url) {return {url: url, title: urlModule.parse(url).host.split('.')[1]};}), username)
     .then(function () {
       response.sendStatus(201);
@@ -33,8 +36,14 @@ exports.linksPost = function (request, response) {
 
 exports.linksGet = function (request, response) {
   var username = request.query.username;
-  db.fetchUrls(username)
+
+  // console.log(username);
+
+
+  db.fetchLinksForUser(username)
     .then(function (data) {
+
+      // console.log('---links for ' + username + ' : ' , data);
       response.send(JSON.stringify(data));
     })
   .catch(function (error) {

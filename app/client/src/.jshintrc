@@ -2,6 +2,7 @@
   "browser": true,
   "jquery": true,
   "browserify": true,
+  "devel": true,
   "esnext": true,
   "bitwise": true,
   "camelcase": true,

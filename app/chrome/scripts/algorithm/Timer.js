@@ -59,7 +59,7 @@ var Timer = {
       })
       .catch(function (error) {
         console.error(error);
-      });;
+      });
       
       this.initialize(queue);
     }

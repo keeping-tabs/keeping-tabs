@@ -3,7 +3,6 @@
 
 localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
 
-
 //assumes instance of Queue exists
 var Queue = require('./Queue.js');
 var Timer = require('./Timer.js');
@@ -17,6 +16,14 @@ exports.init = function() {
   timer.timeLimit = localData.time ? localData.time : 1000 * 60 * 60;
 
   var currentTabs = {};
+
+  chrome.runtime.onMessageExternal.addListener(
+  function(request, sender, sendResponse) {
+    console.log('msg from angular client: ', request);
+    console.log('sendResponse: ', sendResponse);
+    
+    Chrome.setLocalStorage(request);
+  });
 
   addAllListeners();
 
