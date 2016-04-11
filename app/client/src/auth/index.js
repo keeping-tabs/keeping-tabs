@@ -6,7 +6,7 @@ if(window.location.hostname === 'localhost') {
   auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
 }
 
-auth.config(function($stateProvider) {
+auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
 
   var path = './auth/';
   
@@ -23,6 +23,13 @@ auth.config(function($stateProvider) {
   });
 
   localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
+
+  jwtInterceptorProvider.tokenGetter = function() {
+    console.log('interceptor token: ', JSON.parse(localStorage.getItem('keepingTabs')).token);
+    return JSON.parse(localStorage.getItem('keepingTabs')).token;
+  };
+
+  $httpProvider.interceptors.push('jwtInterceptor');
 
 });
 
