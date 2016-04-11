@@ -39,7 +39,6 @@ auth.factory('Auth', function($http, chromeID) {
     .then(function(result){
       console.log('token: ', result.data.token);
       var token = result.data.token;
-
       setlocalStorage(user, token);
 
 
@@ -53,8 +52,8 @@ auth.factory('Auth', function($http, chromeID) {
     return $http.post('/api/login', {username: user.username, password: user.password})
     .then(function(result){
       console.log('token: ', result.data.token);
-
-      setlocalStorage(user);
+      var token = result.data.token;
+      setlocalStorage(user, token);
     
     }).catch(function(reason) {
       console.error('Login failed: ', reason.data);

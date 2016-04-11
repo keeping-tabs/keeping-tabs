@@ -9,12 +9,12 @@ var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3')
 
 db.serialize(function() {
   //Uncomment to drop tables when restarting the server
-  // db.run('DROP TABLE IF EXISTS links');
-  // db.run('DROP TABLE IF EXISTS users');
-  // db.run('DROP TABLE IF EXISTS users_links_join');
+  db.run('DROP TABLE IF EXISTS links');
+  db.run('DROP TABLE IF EXISTS users');
+  db.run('DROP TABLE IF EXISTS users_links_join');
 
   db.run('CREATE TABLE IF NOT EXISTS links (id INTEGER PRIMARY KEY ASC, title TEXT, url TEXT UNIQUE, created INTEGER)');
-  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, created INTEGER)');
+  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, salt TEXT, password TEXT,created INTEGER)');
   db.run('CREATE TABLE IF NOT EXISTS users_links_join (id INTEGER PRIMARY KEY ASC, userId INTEGER, linkId INTEGER, FOREIGN KEY(userId) REFERENCES users(id), FOREIGN KEY(id) REFERENCES links(id))');
 });
 
@@ -130,11 +130,17 @@ db.joinTable = function (table1, table2, conditional, joinType, columns) {
   });
 };
 
+var hash = function (password, salt) {
+  // hash the password here
+  return salt + password;
+};
+
 
 db.saveUsers = function (users) {
   return new Promise(function (resolve) {
     users.forEach(function (user, index) {
-     db.insertInto('users', [user, Date.now()], true)
+      var salt = 'tabsSalt';
+     db.insertInto('users', [user.username, salt, hash(user.password, salt), Date.now()], true)
      .then(function () {
       if (index === users.length - 1) {
         resolve('' + users.length + ' users were saved');
@@ -150,8 +156,13 @@ db.fetchUsers = function () {
   return db.fetchTable('users');
 };
 
-db.fetchUserId = function (user) {
-  return db.fetchTable('users', 'id', 'username="' + user + '"');
+db.fetchUserId = function (username) {
+  return db.fetchTable('users', 'id', 'username="' + username + '"');
+};
+
+db.fetchUser = function (username) {
+  console.log('attempt to fetch data for user: ', username);
+  return db.fetchTable('users', '*', 'username="' + username + '"');
 };
 
 
@@ -159,7 +170,7 @@ db.saveUrls = function (urls) {
   if (!(Array.isArray(urls))) {
     throw new Error('expected urls argument to be an array. Instead typeof urls === ' + typeof urls);
   } else if (urls.length === 0) {
-    return Promise.resolve('' + urls.length + ' users were saved');
+    return Promise.resolve('' + urls.length + ' urls were saved');
   }
 
 
@@ -169,7 +180,7 @@ db.saveUrls = function (urls) {
      .then(function () {
       if (index === urls.length - 1) {
         // console.log('' + (index + 1) + ' urls were saved');
-        resolve('' + urls.length + ' users were saved');
+        resolve('' + urls.length + ' urls were saved');
       }
      });
     });
