@@ -3,7 +3,12 @@ var handler = require('./requestHandler.js');
 var auth = require('./authHandler.js');
 var bodyParser = require('body-parser');
 
+var expressJWT = require('express-jwt');
+var jwt = require('jsonwebtoken');
+
 var app = express();
+
+app.use(expressJWT({secret: 'keepingTabsIsTheBoss'}).unless({path: ['/', '/app.js', '/style.css', '/auth/signup.html', '/auth/login.html', '/api/login', '/api/signup', /*'/#/login', '/#/signup',*/ '/api/env', '/chrome/dist/vendors.js', '/chrome/dist/script.js', '/chrome/dist/popup.js', '/chrome/dist/popup.css']}));
 
 module.exports = app;
 

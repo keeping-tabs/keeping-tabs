@@ -1,15 +1,21 @@
 module.exports = function($http) {
 
 
+  var local = JSON.parse(localStorage.keepingTabs);
+	var username = local.username;
+  var token = local.token;
 
-	var username = JSON.parse(localStorage.keepingTabs).username;
   console.log('the username: ', username);
+  console.log('the token: ', token);
 
 
 	return $http({
 	  url: '/api/links', 
 	  method: 'GET',
-	  params: {username: username}
+	  params: {username: username},
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
 	})
   .then(function(result){
     return result.data;
