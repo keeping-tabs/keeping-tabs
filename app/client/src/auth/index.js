@@ -35,7 +35,7 @@ auth.factory('Auth', function($http, chromeID) {
   function signup(user) {
     /* globals chrome:false */
     console.log('signup', user);
-    $http.post('/api/signup', {username: user})
+    return $http.post('/api/signup', {username: user, password: user.password})
     .then(function(result){
       console.log('token: ', result.data.token);
 
@@ -59,7 +59,7 @@ auth.factory('Auth', function($http, chromeID) {
 
   function login(user) {
     console.log('login', user);
-    $http.post('/api/login', {username: user})
+    return $http.post('/api/login', {username: user.username, password: user.password})
     .then(function(result){
       console.log('token: ', result.data.token);
     
