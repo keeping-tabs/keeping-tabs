@@ -36,6 +36,7 @@ auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
 });
 
 auth.factory('Auth', function($http, chromeID, jwtHelper) {
+
   return {
     login: login,
     signup: signup,
@@ -80,7 +81,8 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   }
 
   function isAuthed() {
-    return false;
+    // jwtHelper.isTokenExpired();
+    return !!localStorage.getItem('keepingTabs') && localStorage.getItem('keepingTabs') !== '{}';
   }
 
   function setLocalStorage(user, token) {
