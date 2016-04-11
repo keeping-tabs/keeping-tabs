@@ -9,7 +9,7 @@ var Auth = function() {
 
   function handleLogin(req, res) {
     var username = req.body.username;
-    // var password =  req.body.password;
+    var password =  req.body.password;
 
     db.fetchUserId(username).then(function(users) {
       // do check password
@@ -27,7 +27,7 @@ var Auth = function() {
 
   function handleSignup(req, res) {
     var username = req.body.username;
-    // var password =  req.body.password;
+    var password =  req.body.password;
 
     // query db for the username
     db.fetchUserId(username).then(function(users) {
