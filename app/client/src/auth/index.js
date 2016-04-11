@@ -36,7 +36,8 @@ auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
 auth.factory('Auth', function($http, chromeID, jwtHelper) {
   return {
     login: login,
-    signup: signup
+    signup: signup,
+    logout: logout
   };
 
   function signup(user) {
@@ -66,6 +67,13 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
       setLocalStorage(user, token);
     
     });
+  }
+
+  function logout() {
+    if(localStorage.keepingTabs) {
+      console.log('fake logout');
+      localStorage.keepingTabs = '{}';
+    }
   }
 
   function setLocalStorage(user, token) {
