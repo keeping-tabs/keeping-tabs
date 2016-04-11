@@ -39,8 +39,8 @@ auth.factory('Auth', function($http, chromeID) {
     .then(function(result){
       console.log('token: ', result.data.token);
       var token = result.data.token;
-      setlocalStorage(user, token);
 
+      setLocalStorage(user, token);
 
     }).catch(function(reason) {
       console.error('Login failed: ', reason.data);
@@ -53,14 +53,15 @@ auth.factory('Auth', function($http, chromeID) {
     .then(function(result){
       console.log('token: ', result.data.token);
       var token = result.data.token;
-      setlocalStorage(user, token);
+
+      setLocalStorage(user, token);
     
     }).catch(function(reason) {
       console.error('Login failed: ', reason.data);
     });
   }
 
-  function setlocalStorage(user, token) {
+  function setLocalStorage(user, token) {
     var local = JSON.parse(localStorage.keepingTabs);
 
     local.username = user.username; // should change to storing JWT
