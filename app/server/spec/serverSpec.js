@@ -76,7 +76,7 @@ describe('server', function() {
 
     it('POST /api/links', function(done) {
 
-      db.saveUsers(['temp']);
+      db.saveUsers([{username: 'temp', password: 'password123'}]);
 
       request
         .post('/api/links')

@@ -1,6 +1,8 @@
 var db = require('./database.js');
 var jwt = require('jsonwebtoken');
 
+var hash = require('./hash.js');
+
 var Auth = function() {
   return {
     login: handleLogin,
@@ -12,12 +14,25 @@ var Auth = function() {
     var username = req.body.username;
     var password =  req.body.password;
 
-    db.fetchUserId(username).then(function(users) {
+    db.fetchUser(username).then(function(users) {
       // do check password
-      if(users.length > 0) {
-        res.status(200).send({token: username + 'faketoken'});
+      if(users.length === 1) {
+        console.log('users: ', users);
+
+        var user = users[0];
+        return hash.checkHash(password, user.password)
+        .then(function (bool) {
+          if (bool) {
+            var token = jwt.sign({username: username}, 'keepingTabsIsTheBoss');
+            res.status(200).send({token: token});
+          } else {
+            console.warn('User '+ username + ' and password doesn\'t exist');
+            res.status(401).send('User '+ username + ' doesn\'t exist');  
+          }
+        });
+
       } else {
-        console.warn('User '+ username + ' doesn\'t exist');
+        console.warn('User '+ username + ' and password doesn\'t exist');
         res.status(401).send('User '+ username + ' doesn\'t exist');
       }
     }).catch(function(reason) {
@@ -39,7 +54,7 @@ var Auth = function() {
         res.sendStatus(422);
 
       } else {
-        db.saveUsers([username]).then(function() {
+        db.saveUsers([{username: username, password: password}]).then(function() {
           console.log('User '+ username + ' created');
 
           var token = jwt.sign({username: username}, 'keepingTabsIsTheBoss');
