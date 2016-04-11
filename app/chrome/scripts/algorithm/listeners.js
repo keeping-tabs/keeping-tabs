@@ -83,35 +83,26 @@ exports.init = function() {
   }
 
   function handleOnCreated(tab){
-    // console.log('created: ', tab.id);
-    // currentTabs[tab.id] = true;
-    // console.log('current tabs: ', currentTabs);
-    // // Chrome.setData(tab)
-    // // .then(function (dataObj) {
-    //   // var oldTab = currentTab;
-    //   Chrome.updateCurrentTabs(queue, currentTabs)
-    //   .then(Chrome.getActiveTabs)
-    //   .then(Chrome.mapToTabIds)
-    //   .then(function (tabIds) {
-    //     return Chrome.findOldTabId(tabIds, currentTabs);
-    //   })
-    //   .then(function (oldTabId) {
-    //     if (oldTabId) {
-    //       // console.log(oldTabId);
-    //       return Chrome.getTab(Number(oldTabId))
-    //       .then(Chrome.setData)
-    //       .then(function (dataObj) {
-    //         // console.log('created: ', dataObj.tab.id);
-    //         currentTabs[oldTabId] = dataObj;
-    //           var oldTab = currentTabs[oldTabId];
-    //           delete currentTabs[oldTabId];
+    Chrome.getActiveTabs()
+    .then(function (activeTabs) {
+      // is the created tab active
+      var bool = activeTabs.some(function (activeTab) {
+        return activeTab.id === tab.id;
+      });
+      if (!bool) {
+        //created tab is not active. So enqueue it
+        queue.enqueue(String(tab.id), Chrome.data(tab));
+        timer.initialize(queue);
 
-    //           queue.enqueue(String(oldTab.tab.id), oldTab.data);
-    //           timer.initialize(queue);
-    //       });
-    //     }
-    //   });
-    // // });
+      }
+      return Promise.resolve('queued tab ' + tab.id);
+    })
+    .then(function log (message) {
+      console.log(message);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
   }
 
   function handleOnUpdated(tabId){
@@ -124,121 +115,59 @@ exports.init = function() {
     // });
   }
 
+  var _state = {active: []};
+
+  function difference (array1, array2, map1, map2) {
+    var output = [];
+    map1 = typeof map1 === 'function' ? map1 : function (element) {return element;};
+    map2 = typeof map2 === 'function' ? map2 : function (element) {return element;};
+
+    array1.forEach(function (element1) {
+      var bool = array2.some(function (element2) {
+        return  map1(element1) === map2(element2);
+      });
+      if (!bool) {
+        output.push(element1);
+      }
+    });
+    return output;
+  }
+
+  function toId (tab) { return tab.id; }
+
+  function indetity (val) { return val; }
+
   function handleOnActivated(activeInfo){
     var tabId = activeInfo.tabId;
+    queue.delete(String(tabId));
 
-    currentTabs[tabId] = true;
-
-    // console.log(currentTabs);
-
-    // Chrome.updateCurrentTabs(queue)//this will remove tabs from the queue and the currentTabs object if they are no longer open
     Chrome.getActiveTabs()
-    .then(Chrome.mapToTabIds)
-    .then(function (activeTabIds) {
-      var oldTabId = null;
-      for (var tabId in currentTabs) {
-        if(
-          !activeTabIds.some(function (activeTabId) {
-            return activeTabId === Number(tabId);
-          })
-        ) {
-          oldTabId = Number(tabId);
-        }
-      }
-      return Promise.resolve(oldTabId);
-    })
-    // .then(function (tabIds) {
-    //   console.log('active tabs: ', tabIds);
-    //   return Chrome.findOldTabId(tabIds, currentTabs);
-    // })
-    .then(function (oldTabId) {
-      // console.log('compare tab ids:', oldTabId, tabId);
-      if (oldTabId !== tabId && oldTabId !== null) {
-        // make sure the old tab is not equal to the new tab
-        // make sure the old tab is not null
-        // console.log('oldTab: ', oldTabId);
-        
-        // make sure the old tab was not closed
-        return Chrome.getAllTabs()
-        .then(Chrome.mapToTabIds)
-        .then(function (allTabIds) {
-          var bool = allTabIds.some(function (tabId) {
-            return tabId === oldTabId;
-          });
-          if (bool) {
-            return Chrome.getTab(oldTabId)
-            .then(Chrome.setData)
-            .then(function (dataObj) {
-              // console.log('created: ', dataObj.tab.id);
-              // currentTabs[oldTabId] = dataObj;
-              // var oldTab = currentTabs[oldTabId];
-              delete currentTabs[oldTabId];
-              queue.delete(String(oldTabId));
+    .then(function (activeTabs) {
+      // find the last active tab by calculating the difference between the _state active tabs and the current active tabs
+      var oldTab = difference(_state.active, activeTabs, toId, toId);
+      _state.active = activeTabs;
 
-              queue.enqueue(String(oldTabId), dataObj.data);
-              timer.initialize(queue);
-              return Promise.resolve('queued tab#' + oldTabId);
-            });
-          }
-        });
-      }
+      if (oldTab.length > 1) {
+        // unexpected outcome: there should only be one or zero old tabs
+        // potentially could be caused by the the listeners being off for some period
+        throw new Error('unexpected number of old tabs expected 0 or 1 instead got ' + oldTab.length);
+      } 
+      if (oldTab.length === 0) {
+        // Do nothing. The new tab was opened in a new window.
+      } 
+      if (oldTab.length === 1) {
+        var oldTab = oldTab[0];
+        queue.enqueue(String(oldTab.id), Chrome.data(oldTab));
+        timer.initialize(queue);
+      } 
+      return Promise.resolve('queued tab ' + oldTab.id);
     })
-    .then(function (message) {
+    .then(function log (message) {
       console.log(message);
     })
     .catch(function (error) {
       console.error(error);
     });
-
-
-
-
-
-
-
-    // // find tab in queue using tabId (given in activeInfo),
-    // var tabId = activeInfo.tabId;
-
-    // // Chrome.getTab(tabId)
-    // // .then(Chrome.setData)
-    // // .then(function (dataObj) {
-    //   // console.log('activated', dataObj.tab.id);
-    //   currentTabs[tabId] = true;
-
-    //   Chrome.updateCurrentTabs(queue)
-    //   .then(Chrome.getActiveTabs)
-      // .then(Chrome.mapToTabIds)
-      // .then(function (tabIds) {return Chrome.findOldTabId(tabIds, currentTabs);})
-    //   .then(function (oldTabId) {
-    //     // console.log('oldTabId: ', oldTabId);
-    //     // console.log('activated: ', dataObj.tab.id);
-    //     if (oldTabId) {
-    //       // console.log(oldTabId);
-    //       return Chrome.getTab(Number(oldTabId))
-    //       .then(Chrome.setData)
-    //       .then(function (dataObj) {
-    //         // console.log('created: ', dataObj.tab.id);
-    //         currentTabs[oldTabId] = dataObj;
-    //           var oldTab = currentTabs[oldTabId];
-    //           delete currentTabs[oldTabId];
-    //           queue.delete(String(dataObj.tab.id));
-
-    //           queue.enqueue(String(oldTab.tab.id), oldTab.data);
-    //           timer.initialize(queue);
-    //       });
-        // }
-
-        
-        // currentTabs[dataObj.tab.id] = dataObj;
-        // if (oldTabId) {
-        //   var oldTab = currentTabs[oldTabId];
-        //   delete currentTabs[oldTabId];
-
-        //   queue.update(String(oldTab.tab.id), oldTab.data);
-        //   timer.initialize(queue);
-        // }
-      // });
-    // });
   }
 
   function handleOnRemoved(tabId){
