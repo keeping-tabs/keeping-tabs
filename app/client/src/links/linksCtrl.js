@@ -3,5 +3,5 @@ module.exports = function($scope, links, Auth, $state) {
   $scope.logout = function() {
     Auth.logout();
     $state.go('login');
-  }
+  };
 };

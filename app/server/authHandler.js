@@ -20,8 +20,7 @@ var Auth = function() {
         console.log('users: ', users);
 
         var user = users[0];
-        return hash.checkHash(password, user.password)
-        .then(function (bool) {
+        return hash.checkHash(password, user.password).then(function (bool) {
           if (bool) {
             var token = jwt.sign({username: username}, 'keepingTabsIsTheBoss');
             res.status(200).send({token: token});
@@ -59,7 +58,7 @@ var Auth = function() {
 
           var token = jwt.sign({username: username}, 'keepingTabsIsTheBoss');
 
-          console.log('attempt to set token')
+          console.log('attempt to set token');
           
           res.status(201).send({token: token});
 
