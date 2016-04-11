@@ -1,5 +1,10 @@
 var path = require('path');
 var sqlite3 = require('sqlite3');
+var hash = require('./hash.js');
+
+
+
+
 
 var db = new sqlite3.Database(path.join(__dirname, '../db/keeping-tabs.sqlite3'), function(err) {
   if(err) {
@@ -14,7 +19,7 @@ db.serialize(function() {
   db.run('DROP TABLE IF EXISTS users_links_join');
 
   db.run('CREATE TABLE IF NOT EXISTS links (id INTEGER PRIMARY KEY ASC, title TEXT, url TEXT UNIQUE, created INTEGER)');
-  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, salt TEXT, password TEXT,created INTEGER)');
+  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY ASC, username TEXT UNIQUE, password TEXT,created INTEGER)');
   db.run('CREATE TABLE IF NOT EXISTS users_links_join (id INTEGER PRIMARY KEY ASC, userId INTEGER, linkId INTEGER, FOREIGN KEY(userId) REFERENCES users(id), FOREIGN KEY(id) REFERENCES links(id))');
 });
 
@@ -130,22 +135,27 @@ db.joinTable = function (table1, table2, conditional, joinType, columns) {
   });
 };
 
-var hash = function (password, salt) {
-  // hash the password here
-  return salt + password;
-};
+// var hash = function (password, salt) {
+//   // hash the password here
+//   return salt + password;
+// };
 
 
 db.saveUsers = function (users) {
   return new Promise(function (resolve) {
     users.forEach(function (user, index) {
-      var salt = 'tabsSalt';
-     db.insertInto('users', [user.username, salt, hash(user.password, salt), Date.now()], true)
-     .then(function () {
-      if (index === users.length - 1) {
-        resolve('' + users.length + ' users were saved');
-      }
-     });
+      hash.makeHash(user.password)
+      .then(function (hash) {
+        // var salt = 'tabsSalt';
+        db.insertInto('users', [user.username, /*salt,*/ hash, Date.now()], true)
+        .then(function () {
+         if (index === users.length - 1) {
+           resolve('' + users.length + ' users were saved');
+         }
+        });
+        
+      });
+
     });
   });
 };
