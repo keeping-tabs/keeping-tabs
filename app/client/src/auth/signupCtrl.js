@@ -1,10 +1,8 @@
-module.exports = function($scope, Auth) {
-  $scope.signup = Auth.signup;
-  // $scope.onSignIn = function(googleUser) {
-  //   var profile = googleUser.getBasicProfile();
-  //   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-  //   console.log('Name: ' + profile.getName());
-  //   console.log('Image URL: ' + profile.getImageUrl());
-  //   console.log('Email: ' + profile.getEmail());
-  // }
+module.exports = function($scope, Auth, $state) {
+  $scope.user = {};
+  $scope.signup = function() {
+    Auth.signup($scope.user).then(function() {
+      $state.go('link');
+    });
+  };
 };

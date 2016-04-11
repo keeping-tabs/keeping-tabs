@@ -56,7 +56,7 @@ describe('server', function() {
     });
   });
 
-  describe('API', function() {
+  xdescribe('API', function() {
     
     describe('Signup and Login', function() {
       it('POST /api/signup', function(done) {
