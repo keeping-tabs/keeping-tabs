@@ -83,26 +83,29 @@ exports.init = function() {
   }
 
   function handleOnCreated(tab){
-    Chrome.getActiveTabs()
-    .then(function (activeTabs) {
-      // is the created tab active
-      var bool = activeTabs.some(function (activeTab) {
-        return activeTab.id === tab.id;
-      });
-      if (!bool) {
-        //created tab is not active. So enqueue it
-        queue.enqueue(String(tab.id), Chrome.data(tab));
-        timer.initialize(queue);
+    Chrome.tabHasLoaded(tab)
+    .then(function (tab) {
+      return Chrome.getActiveTabs()
+      .then(function (activeTabs) {
+        // is the created tab active
+        var bool = activeTabs.some(function (activeTab) {
+          return activeTab.id === tab.id;
+        });
+        if (!bool) {
+          //created tab is not active. So enqueue it
+          queue.enqueue(String(tab.id), Chrome.data(tab));
+          timer.initialize(queue);
 
-      }
-      return Promise.resolve('queued tab ' + tab.id);
+        }
+        return Promise.resolve('queued tab ' + tab.id);
+      })
+      .then(function log (message) {
+        console.log(message);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
     })
-    .then(function log (message) {
-      console.log(message);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
   }
 
   function handleOnUpdated(tabId){
@@ -145,12 +148,30 @@ exports.init = function() {
     .then(function (activeTabs) {
       // find the last active tab by calculating the difference between the _state active tabs and the current active tabs
       var oldTab = difference(_state.active, activeTabs, toId, toId);
+
+      console.log('this is the old tab: ', oldTab);
       _state.active = activeTabs;
 
       if (oldTab.length > 1) {
-        // unexpected outcome: there should only be one or zero old tabs
-        // potentially could be caused by the the listeners being off for some period
-        throw new Error('unexpected number of old tabs expected 0 or 1 instead got ' + oldTab.length);
+        throw new Error('unexpected number of old tabs expected 1 instead got ' + oldTab.length);
+
+        // if there are more than 1 oldTabs then check which one is still open
+        // this case will happen if the user has manually closed an active tab in a window with just one tab
+        // return Chrome.getAllTabs()
+        // .then(function (allTabs) {
+        //   var oldTab = oldTab.filter(function (old) {
+        //     return allTabs.some(function (openTab) {
+        //       return openTab === old;
+        //     }); 
+        //   });
+        //   if (oldTab.length !== 1) {
+        //    throw new Error('unexpected number of old tabs expected 1 instead got ' + oldTab.length);
+        //   }
+        //   var oldTab = oldTab[0];
+        //   queue.enqueue(String(oldTab.id), Chrome.data(oldTab));
+        //   timer.initialize(queue);          
+        // });
+
       } 
       if (oldTab.length === 0) {
         // Do nothing. The new tab was opened in a new window.

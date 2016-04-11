@@ -45,6 +45,18 @@ var Chrome = (function () {
           chrome.tabs.query({'active':true}, resolve);
       });
     },
+    tabHasLoaded: function (tab) {
+      return new Promise(function (resolve) {
+        var listener = function (tabId , info) {
+          if (info.status === "complete") {
+              // I am not sure why the chrome api throws an error with this. I want to remove the listener after it has fired. I realize that the Promise will only be resolved once, but it seems clunky.
+              // chrome.onUpdated.removeListener(listener);
+              resolve(tab);
+          }
+        };
+        chrome.tabs.onUpdated.addListener(listener);
+      });
+    },
     isTabStillOpen : function (tabId) {
       return Chrome.getAllTabs()
       .then(function (allTabs) {
