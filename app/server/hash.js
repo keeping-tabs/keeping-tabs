@@ -7,7 +7,7 @@ var makeHash = function (password) {
   return new Promise(function (resolve) {
     bcrypt.genSalt(saltRounds, function(error, salt) {
         if (error) {
-          throw new Error('issue generating the salt: ', err);
+          throw new Error('issue generating the salt: ', error);
         }
         bcrypt.hash(password, salt, function(error, hash) {
           if (error) {

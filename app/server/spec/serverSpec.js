@@ -102,7 +102,7 @@ describe('server', function() {
   });
 });
 
-describe('database tests', function () {
+xdescribe('database tests', function () {
   var usernames = ['louie', 'jake', 'justin', 'ivan'];
   var users = {louie: {}, jake: {}, ivan: {}, justin: {}};
 

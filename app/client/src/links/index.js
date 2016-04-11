@@ -12,7 +12,8 @@ links.config(function($stateProvider) {
     },
     url: '/urls',
     controller: 'linksCtrl',
-    templateUrl: path + 'links.html'
+    templateUrl: path + 'links.html',
+    authenticate: true
   });
 
 });

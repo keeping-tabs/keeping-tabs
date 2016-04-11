@@ -16,7 +16,8 @@ exports.init = function() {
   timer.timeLimit = localData.time ? localData.time : 1000 * 60 * 60;
 
   var currentTabs = {};
-
+  
+  console.log('listener init');
   chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     console.log('msg from angular client: ', request);

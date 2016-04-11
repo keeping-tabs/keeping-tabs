@@ -14,9 +14,9 @@ var setLinks = function (links, username) {
 exports.linksPost = function (request, response) {
   var urls = request.body.urls;
   // console.log('url: ', urls);
-  var username = request.body.username;
+  var username = request.user.username;
  
-// console.log('post received from: ', username);
+  console.log('post received from: ', username);
 
   setLinks(urls.map(function (url) {return {url: url, title: urlModule.parse(url).host.split('.')[1]};}), username)
     .then(function () {
@@ -35,12 +35,12 @@ exports.linksPost = function (request, response) {
 // what we have now is just an example
 
 exports.linksGet = function (request, response) {
-  var username = request.query.username;
-   // var username = request.user.username;
+  // var username = request.query.username;
+   var username = request.user.username;
 
 
 
-  // console.log(username);
+  console.log('request from ', username);
 
 
   db.fetchLinksForUser(username)
