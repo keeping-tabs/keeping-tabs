@@ -40,23 +40,8 @@ auth.factory('Auth', function($http, chromeID) {
       console.log('token: ', result.data.token);
       var token = result.data.token;
 
-<<<<<<< 467da85a28b1bd53267081dc1a6c2195ad20edc9
-      setlocalStorage(user);
-=======
-      var local = JSON.parse(localStorage.keepingTabs);
-      // var local_storage = localStorage.keepingTabs ? JSON.parse(localStorage.keepingTabs) : {};
+      setlocalStorage(user, token);
 
-      local.username = user;
-      local.token = token;
-      localStorage.keepingTabs = JSON.stringify(local);
-
-      console.log('chromeID: ', chromeID);
-
-      chrome.runtime.sendMessage(chromeID, {username: user},
-      function(response) {
-        console.log('response from chrome ext: ', response);
-      });
->>>>>>> backend auth
 
     }).catch(function(reason) {
       console.error('Login failed: ', reason.data);
@@ -76,10 +61,11 @@ auth.factory('Auth', function($http, chromeID) {
     });
   }
 
-  function setlocalStorage(user) {
+  function setlocalStorage(user, token) {
     var local = JSON.parse(localStorage.keepingTabs);
 
     local.username = user.username; // should change to storing JWT
+    local.token = token;
     localStorage.keepingTabs = JSON.stringify(local);
 
     chrome.runtime.sendMessage(chromeID, {username: user.username},
