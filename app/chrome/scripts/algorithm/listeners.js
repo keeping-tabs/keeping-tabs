@@ -148,7 +148,8 @@ exports.init = function() {
     .then(function (activeTabs) {
       // find the last active tab by calculating the difference between the _state active tabs and the current active tabs
       var oldTab = difference(_state.active, activeTabs, toId, toId);
-
+      console.log('state active: ', _state.active);
+      console.log('active tabs: ', activeTabs);
       console.log('this is the old tab: ', oldTab);
       _state.active = activeTabs;
 
