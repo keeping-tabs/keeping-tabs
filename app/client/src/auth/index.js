@@ -26,7 +26,7 @@ auth.config(function($stateProvider) {
 
 });
 
-auth.factory('Auth', function($http, chromeID) {
+auth.factory('Auth', function($http, chromeID, jwtHelper) {
   return {
     login: login,
     signup: signup
@@ -39,11 +39,10 @@ auth.factory('Auth', function($http, chromeID) {
     .then(function(result){
       console.log('token: ', result.data.token);
       var token = result.data.token;
+      var user = jwtHelper.decodeToken(token);
 
+      console.log('token user: ', user);
       setLocalStorage(user, token);
-
-    }).catch(function(reason) {
-      console.error('Login failed: ', reason.data);
     });
   }
 
@@ -51,13 +50,14 @@ auth.factory('Auth', function($http, chromeID) {
     console.log('login', user);
     return $http.post('/api/login', {username: user.username, password: user.password})
     .then(function(result){
+      var token = result.data.token;
+      var user = jwtHelper.decodeToken(token);
+
       console.log('token: ', result.data.token);
       var token = result.data.token;
 
       setLocalStorage(user, token);
     
-    }).catch(function(reason) {
-      console.error('Login failed: ', reason.data);
     });
   }
 
