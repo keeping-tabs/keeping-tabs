@@ -15,11 +15,13 @@ var Chrome = (function () {
       localStorage.keepingTabs = JSON.stringify(storage);
     },
     postTabs : function (urls, username) {
+      var storage = JSON.parse(localStorage.keepingTabs);
       // sending object
       return new Promise(function(resolve,reject){
         console.log('post to for user: ', username);
         $.ajax({
           type: 'POST',
+          headers: {'Authorization': 'Bearer ' + storage.token},
           url: ENV.url + '/api/links',
           data: {
             urls: urls,

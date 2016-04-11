@@ -99,7 +99,10 @@ db.fetchLinksForUser = function (username) {
     'INNER', 
     'linkId')
   .then(function (data) {
-    // console.log('data: ', data);
+    console.log('data: ', data);
+    if(data.length === 0) {
+      return Promise.resolve('1=0');
+    }
     return Promise.resolve(
       data.map(function (element) {return element.linkId;})
       .map(function (id) {return 'id = ' + id;})

@@ -1,7 +1,8 @@
 var auth = angular.module('keepingTabs.auth', []);
 
 if(window.location.hostname === 'localhost') {
-  auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk');
+  // auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk');
+  auth.constant('chromeID', 'mnpdddadmepheffcplflcgknojcpjpem');
 } else {
   auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
 }
@@ -49,11 +50,13 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
     console.log('signup', user);
     return $http.post('/api/signup', {username: user.username, password: user.password})
     .then(function(result){
-      console.log('token: ', result.data.token);
       var token = result.data.token;
       var user = jwtHelper.decodeToken(token);
+      
 
+      console.log('token: ', token);
       console.log('token user: ', user);
+
       setLocalStorage(user, token);
     });
   }
@@ -65,8 +68,8 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
       var token = result.data.token;
       var user = jwtHelper.decodeToken(token);
 
-      console.log('token: ', result.data.token);
-      var token = result.data.token;
+      console.log('token: ', token);
+      console.log('token user: ', user);
 
       setLocalStorage(user, token);
     
@@ -76,7 +79,7 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   function logout() {
     if(localStorage.keepingTabs) {
       console.log('fake logout');
-      localStorage.removeItem['keepingTabs'];
+      window.localStorage.removeItem('keepingTabs');
     }
   }
 
@@ -86,13 +89,15 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   }
 
   function setLocalStorage(user, token) {
+    console.log('setLocalStorage...');
     var local = JSON.parse(localStorage.keepingTabs);
 
     local.username = user.username; // should change to storing JWT
     local.token = token;
     localStorage.keepingTabs = JSON.stringify(local);
-
-    chrome.runtime.sendMessage(chromeID, {username: user.username},
+    
+    console.log('sending token to chrome: ', chromeID);
+    chrome.runtime.sendMessage(chromeID, {username: user.username, token: token},
     function(response) {
       console.log('response from chrome ext: ', response);
     });
