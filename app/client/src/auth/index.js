@@ -13,13 +13,15 @@ auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
   $stateProvider.state('signup', {
     url: '/signup',
     controller: 'signupCtrl',
-    templateUrl: path + 'signup.html'
+    templateUrl: path + 'signup.html',
+    authenticate: false
   });
 
   $stateProvider.state('login', {
     url: '/login',
     controller: 'loginCtrl',
-    templateUrl: path + 'login.html'
+    templateUrl: path + 'login.html',
+    authenticate: false
   });
 
   localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
@@ -37,7 +39,8 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   return {
     login: login,
     signup: signup,
-    logout: logout
+    logout: logout,
+    isAuthed: isAuthed
   };
 
   function signup(user) {
@@ -72,8 +75,12 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   function logout() {
     if(localStorage.keepingTabs) {
       console.log('fake logout');
-      localStorage.keepingTabs = '{}';
+      localStorage.removeItem['keepingTabs'];
     }
+  }
+
+  function isAuthed() {
+    return false;
   }
 
   function setLocalStorage(user, token) {
