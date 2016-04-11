@@ -1,8 +1,10 @@
 var auth = angular.module('keepingTabs.auth', []);
 
-// auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
-
-auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk');
+if(window.location.hostname === 'localhost') {
+  auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk');
+} else {
+  auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
+}
 
 auth.config(function($stateProvider) {
 
