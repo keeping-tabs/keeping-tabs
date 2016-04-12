@@ -28,8 +28,9 @@ auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
   localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
 
   jwtInterceptorProvider.tokenGetter = function() {
-    console.log('interceptor token: ', JSON.parse(localStorage.getItem('keepingTabs')).token);
-    return JSON.parse(localStorage.getItem('keepingTabs')).token;
+    var token = localStorage.getItem('keepingTabs') && JSON.parse(localStorage.getItem('keepingTabs')).token;
+    console.log('interceptor token: ', token);
+    return token;
   };
 
   $httpProvider.interceptors.push('jwtInterceptor');

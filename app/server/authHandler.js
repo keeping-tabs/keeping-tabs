@@ -26,7 +26,7 @@ var Auth = function() {
             res.status(200).send({token: token});
           } else {
             console.warn('User '+ username + ' and password doesn\'t exist');
-            res.status(401).send('User '+ username + ' doesn\'t exist');  
+            res.status(401).send('User '+ username + ' doesn\'t exist');
           }
         });
 
