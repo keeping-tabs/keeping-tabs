@@ -146,19 +146,19 @@ Back
 UP
 ****************/
 #justin {
-  background-image: url(https://files.slack.com/files-tmb/T0JCYCPPH-F0ZQPALNB-4a968e6d9c/img_8398_1024.jpg);
+  background-image: url(../Pics/justin.jpg);
 }
 
 #ivan {
-  background-image: url(https://files.slack.com/files-tmb/T0JCYCPPH-F0ZQGN1R6-d00eaf1def/img_8393_1024.jpg);
+  background-image: url(../Pics/ivan.jpg);
 }
 
 #jake {
-  background-image: url(https://files.slack.com/files-tmb/T0JCYCPPH-F0ZQRTWSZ-3da34f3442/fullsizerender_1024.jpg);
+  background-image: url(../Pics/jake.jpg);
 }
 
 #louis {
-  background-image: url(https://files.slack.com/files-tmb/T0JCYCPPH-F0ZQJ19SR-81a417079b/img_8391_1024.jpg)
+  background-image: url(../Pics/louie.jpg)
 }
 
 .card  .up {
