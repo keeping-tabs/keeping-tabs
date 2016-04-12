@@ -1,8 +1,8 @@
 var auth = angular.module('keepingTabs.auth', []);
 
 if(window.location.hostname === 'localhost') {
-  // auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk');
-  auth.constant('chromeID', 'mnpdddadmepheffcplflcgknojcpjpem');
+  auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk'); // louie
+  // auth.constant('chromeID', 'mnpdddadmepheffcplflcgknojcpjpem');
 } else {
   auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
 }
