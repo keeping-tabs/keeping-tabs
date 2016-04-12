@@ -25,7 +25,9 @@ auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
     authenticate: false
   });
 
-  localStorage.keepingTabs = localStorage.keepingTabs ? localStorage.keepingTabs : '{}';
+  if(!localStorage.getItem('keepingTabs')) {
+    localStorage.setItem('keepingTabs', '{}');
+  }
 
   jwtInterceptorProvider.tokenGetter = function() {
     var token = localStorage.getItem('keepingTabs') && JSON.parse(localStorage.getItem('keepingTabs')).token;
@@ -80,7 +82,7 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
   function logout() {
     if(localStorage.keepingTabs) {
       console.log('fake logout');
-      window.localStorage.removeItem('keepingTabs');
+      window.localStorage.setItem('keepingTabs', '{}');
     }
   }
 
@@ -91,7 +93,7 @@ auth.factory('Auth', function($http, chromeID, jwtHelper) {
 
   function setLocalStorage(user, token) {
     console.log('setLocalStorage...');
-    var local = JSON.parse(localStorage.keepingTabs);
+    var local = JSON.parse(localStorage.getItem('keepingTabs'));
 
     local.username = user.username; // should change to storing JWT
     local.token = token;
