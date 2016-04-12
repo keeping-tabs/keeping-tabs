@@ -76,6 +76,7 @@ exports.init = function() {
           // _settings.username = msg.username;
           // Chrome.setLocalStorage({username: msg.username});
           localStorage.keepingTabs = '{}';
+          timer.deactivate();
           port.postMessage(msg);
         }
 
@@ -84,6 +85,7 @@ exports.init = function() {
   });
 
   function addAllListeners() {
+console.log('add all listeners');
     chrome.tabs.onCreated.addListener(handleOnCreated);
     chrome.tabs.onUpdated.addListener(handleOnUpdated);
     chrome.tabs.onActivated.addListener(handleOnActivated);
@@ -91,6 +93,8 @@ exports.init = function() {
   }
 
   function removeAllListeners() {
+
+    console.log('remove all listeners');
     chrome.tabs.onCreated.removeListener(handleOnCreated);
     chrome.tabs.onUpdated.removeListener(handleOnUpdated);
     chrome.tabs.onActivated.removeListener(handleOnActivated);
@@ -98,6 +102,10 @@ exports.init = function() {
   }
 
   function handleOnCreated(tab){
+    
+    if (!timer.isActive) {
+      return void 0;
+    }
     Chrome.tabHasLoaded(tab)
     .then(Chrome.isTabActive)
     .then(function (bool) {
@@ -122,6 +130,9 @@ exports.init = function() {
   }
 
   function handleOnUpdated(tabId){
+    if (!timer.isActive) {
+      return void 0;
+    }
     // Chrome.getTab(tabId)
     // .then(Chrome.setData)
     // .then(function (dataObj) {
@@ -154,6 +165,9 @@ exports.init = function() {
   function indetity (val) { return val; }
 
   function handleOnActivated(activeInfo){
+    if (!timer.isActive) {
+      return void 0;
+    }
     var tabId = activeInfo.tabId;
     queue.delete(String(tabId));
 
@@ -208,6 +222,9 @@ exports.init = function() {
   }
 
   function handleOnRemoved(tabId){
+    if (!timer.isActive) {
+      return void 0;
+    }
     queue.delete(String(tabId));
     timer.initialize(queue);
   }
