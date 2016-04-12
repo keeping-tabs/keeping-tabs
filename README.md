@@ -1,6 +1,8 @@
 # Keeping Tabs #
 > Smart browser tabs management
 
+http://keeping-tabs.github.io/keeping-tabs
+
 # Team #
 
 - Product Owner - @louisbuchbinder
