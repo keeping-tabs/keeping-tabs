@@ -71,5 +71,5 @@ app/db/*
 # build dirs
 app/client/dist
 app/chrome/dist
-chrome_ext/dev
-chrome_ext/prod
+chrome_ext/**
+chrome_ext/*
