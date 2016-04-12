@@ -1,10 +1,11 @@
 var auth = angular.module('keepingTabs.auth', []);
 
 if(window.location.hostname === 'localhost') {
-  auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk'); // louie
-  // auth.constant('chromeID', 'mnpdddadmepheffcplflcgknojcpjpem');
+  // auth.constant('chromeID', 'oemdjnakicolhbihmkgeglmbchojlepk'); // louie
+  auth.constant('chromeID', 'mnpdddadmepheffcplflcgknojcpjpem'); // jake
 } else {
-  auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
+  // auth.constant('chromeID', 'amaekhdmilmhgmoaackfphcjclhghmfe');
+  auth.constant('chromeID', 'hepbjbgphnkamhcipnpahjofennlooma');
 }
 
 auth.config(function($stateProvider, $httpProvider, jwtInterceptorProvider) {
